@@ -1,11 +1,17 @@
 ﻿using System.IO;
+using System.Security.Cryptography;
 
 namespace Evolution.Game.Model
 {
-    public class Zavr : IHavePosition
+    public class Zavr : IBeing
     {
         private int _sight;
-        private Position _position;
+        private readonly Position _position;
+
+        public Zavr(Position position)
+        {
+            _position = position;
+        }
 
         /// <summary>
         /// Gets or sets the range of sight.
@@ -34,6 +40,18 @@ namespace Evolution.Game.Model
             // point of view
             _position.X = x;
             _position.Y = y;
+        }
+
+        public static Zavr GetRandomZavr(int x, int y)
+        {
+            var zavr = new Zavr(new Position(x,y));
+            zavr._sight = RandomNumberGenerator.GetInt32(1, 10);
+            return zavr;
+        }
+
+        public void NextTurn(bool isNormalTurn)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
