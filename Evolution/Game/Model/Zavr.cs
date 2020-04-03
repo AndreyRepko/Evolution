@@ -7,10 +7,16 @@ namespace Evolution.Game.Model
     {
         private int _sight;
         private readonly Position _position;
+        private int _age;
+        private int _enerenergy;
+        private bool _state;
+        private int _speed;
+        private int _look;
 
         public Zavr(Position position)
         {
             _position = position;
+            _age = 1;
         }
 
         /// <summary>
@@ -27,6 +33,31 @@ namespace Evolution.Game.Model
                     throw new InvalidDataException("Sight must be in 1..10 range");
                 _sight = value;
             }
+        }
+
+        public int Age
+        {
+            get => _age;
+        }
+        
+        public int Energy
+        {
+            get => _enerenergy;
+        }
+
+        public bool State
+        {
+            get => _state;
+        }
+
+        public int Speed
+        {
+            get => _speed;
+        }
+
+        public int Look
+        {
+            get => _look;
         }
 
         /// <summary>
