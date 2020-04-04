@@ -11,13 +11,14 @@ namespace Evolution.Game.Model
         private int _enerenergy;
         private bool _state;
         private int _speed;
-        private int _look;
+        private Directions _direction;
         private BeingType _type;
 
         public Zavr(Position position)
         {
             _position = position;
             _age = 1;
+            _state = true;
         }
 
         /// <summary>
@@ -44,6 +45,12 @@ namespace Evolution.Game.Model
         public int Energy
         {
             get => _enerenergy;
+            set
+            {
+                if (value < 0 || value > 10000)
+                    throw new InvalidDataException("enerenergy must be in 1..1 range");
+                _enerenergy = value;
+            }
         }
 
         public bool State
@@ -54,11 +61,17 @@ namespace Evolution.Game.Model
         public int Speed
         {
             get => _speed;
+            set
+            {
+                if (value < 1 || value > 5)
+                    throw new InvalidDataException("speed must be in 5..5 range");
+                _speed = value;
+            }
         }
 
-        public int Look
+        public Directions Direction
         {
-            get => _look;
+            get => _direction;
         }
 
         /// <summary>
@@ -80,8 +93,11 @@ namespace Evolution.Game.Model
         {
             var zavr = new Zavr(position);
             zavr._sight = RandomNumberGenerator.GetInt32(1, 10);
+            zavr._enerenergy = 3000;
+            zavr._speed = RandomNumberGenerator.GetInt32(1, 5);
             return zavr;
         }
+        
 
         public void NextTurn(bool isNormalTurn)
         {

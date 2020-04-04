@@ -26,6 +26,18 @@
                                     <TextBlock Padding="3">Y</TextBlock>
                                     <TextBlock Padding="3" Text="{Binding Path = Position.Y}"/>
                                 </WrapPanel>
+                                <WrapPanel>
+                                    <TextBlock Padding="3">Energy</TextBlock>
+                                    <TextBlock Padding="3" Text="{Binding Energy}"/>
+                                </WrapPanel>
+                                <WrapPanel>
+                                    <TextBlock Padding="3">Speed</TextBlock>
+                                    <TextBlock Padding="3" Text="{Binding Speed}"/>
+                                </WrapPanel>
+                                <WrapPanel>
+                                    <TextBlock Padding="3">Age</TextBlock>
+                                    <TextBlock Padding="3" Text="{Binding Age}"/>
+                                </WrapPanel>
                             </StackPanel>
                         </Setter.Value>
                     </Setter>
@@ -38,6 +50,24 @@
                 </MultiDataTrigger.Conditions>
                 <MultiDataTrigger.Setters>
                     <Setter Property="Image.Source" Value="http://www.wpclipart.com/recreation/games/chess/chess_set_1/chess_piece_black_rook_T.png" />
+                    <Setter Property="ToolTip">
+                        <Setter.Value>
+                            <StackPanel>
+                                <WrapPanel>
+                                    <TextBlock Padding="3">X</TextBlock>
+                                    <TextBlock Padding="3" Text="{Binding Path = Position.X}"/>
+                                </WrapPanel>
+                                <WrapPanel>
+                                    <TextBlock Padding="3">Y</TextBlock>
+                                    <TextBlock Padding="3" Text="{Binding Path = Position.Y}"/>
+                                </WrapPanel>
+                                <WrapPanel>
+                                    <TextBlock Padding="3">Nutrition</TextBlock>
+                                    <TextBlock Padding="3" Text="{Binding Nutrition}"/>
+                                </WrapPanel>
+                            </StackPanel>
+                        </Setter.Value>
+                    </Setter>
                 </MultiDataTrigger.Setters>
             </MultiDataTrigger>
             <!-- <MultiDataTrigger>
