@@ -12,6 +12,7 @@ namespace Evolution.Game.Model
         private bool _state;
         private int _speed;
         private int _look;
+        private BeingType _type;
 
         public Zavr(Position position)
         {
@@ -39,7 +40,7 @@ namespace Evolution.Game.Model
         {
             get => _age;
         }
-        
+
         public int Energy
         {
             get => _enerenergy;
@@ -64,6 +65,8 @@ namespace Evolution.Game.Model
         /// Position of the Zavr
         /// </summary>
         public PositionReadOnly Position => _position;
+
+        public BeingType Type => BeingType.Zavr;
 
         public void ChangePosition(int x, int y)
         {

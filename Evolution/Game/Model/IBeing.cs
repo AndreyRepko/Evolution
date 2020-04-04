@@ -7,5 +7,7 @@ namespace Evolution.Game.Model
     public interface IBeing : INextTurn
     {
         PositionReadOnly Position { get; }
+
+        BeingType Type { get; }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Evolution.Game.Model
+﻿using System.Windows.Navigation;
+
+namespace Evolution.Game.Model
 {
     public class Vegetable : IFood, IBeing
     {
@@ -18,6 +20,8 @@
         public Vegetable(PositionReadOnly position) : this(position, 1)  { }
 
         public PositionReadOnly Position => _position;
+
+        public BeingType Type => BeingType.Tree;
 
         public void NextTurn(bool isNormalTurn)
         {

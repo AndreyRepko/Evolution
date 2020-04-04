@@ -1,0 +1,60 @@
+﻿<Window x:Class="Evolution.Presenter.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Evolution"
+        xmlns:presenter="clr-namespace:Evolution.Presenter"
+        mc:Ignorable="d"
+        Title="You say you wanna evolution, well, you know, we all want to change the world" Height="450" Width="800"
+        d:DataContext="{d:DesignInstance Type=presenter:EvolutionGameModel}">
+    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Viewbox Grid.Row="0" Grid.Column="0">
+            <ItemsControl ItemsSource="{Binding Path=CurrentGame.Population}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas Width="{Binding BoardSize}" Height="{Binding BoardSize}" Background="{StaticResource Checkerboard}"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Width="1" Height="1">
+                            <Image Width="0.8" Height="0.8" Style="{StaticResource ChessPieceStyle}" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemContainerStyle>
+                    <Style>
+                        <Setter Property="Canvas.Left" Value="{Binding Position.X}" />
+                        <Setter Property="Canvas.Top" Value="{Binding Position.Y}" />
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+            </ItemsControl>
+        </Viewbox>
+
+        <StackPanel Grid.Column="1" Grid.Row="0">
+            <Button Command = "{Binding StartNewGameCommand}">Start new game</Button>
+            <Button>Exit</Button>
+        </StackPanel>
+        <StatusBar Grid.Row="1" Grid.Column ="0" Grid.ColumnSpan="2">
+            <StatusBarItem>
+                <TextBlock Text="Some stuff" />
+            </StatusBarItem>
+            <StatusBarItem>
+                <Rectangle VerticalAlignment="Stretch" Fill="Blue" Width="1"/>
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text="Some stuff2" />
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>

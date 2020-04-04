@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Evolution
+namespace Evolution.Presenter
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -10,6 +10,7 @@ namespace Evolution
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new EvolutionGameModel();
         }
     }
 }

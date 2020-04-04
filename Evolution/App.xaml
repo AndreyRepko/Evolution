@@ -2,8 +2,14 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Evolution"
-             StartupUri="MainWindow.xaml">
+             xmlns:items="clr-namespace:Evolution.Presenter.Items"
+             StartupUri="Presenter/MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Presenter/BoardResources.xaml"/>
+                <ResourceDictionary Source="Presenter/BoardItemsDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
