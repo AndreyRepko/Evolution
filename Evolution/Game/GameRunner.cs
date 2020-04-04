@@ -22,7 +22,7 @@ namespace Evolution.Game
             for (var i = 0; i < zavrs; i++)
             {
                 var pos = GetNotOccupiedRandomPosition();
-                Population.Add(new Zavr(pos));
+                Population.Add(Zavr.GetRandomZavr(pos));
             }
 
             for (var i = 0; i < vegetables; i++)

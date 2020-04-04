@@ -76,9 +76,9 @@ namespace Evolution.Game.Model
             _position.Y = y;
         }
 
-        public static Zavr GetRandomZavr(int x, int y)
+        public static Zavr GetRandomZavr(Position position)
         {
-            var zavr = new Zavr(new Position(x,y));
+            var zavr = new Zavr(position);
             zavr._sight = RandomNumberGenerator.GetInt32(1, 10);
             return zavr;
         }
