@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Security.Cryptography;
 
 namespace Evolution.Game.Model
@@ -60,6 +61,20 @@ namespace Evolution.Game.Model
         public static Position GetRandomPosition(int maxX, int maxY)
         {
             return new Position(RandomNumberGenerator.GetInt32(0, maxX), RandomNumberGenerator.GetInt32(0, maxY));
+        }
+
+        public static Directions GetRelativePosition(PositionReadOnly p, in int x, in int y)
+        {
+            if (p.X == x && p.Y > y) return Directions.Up;
+            if (p.X < x && p.Y < y) return Directions.UpRight;
+            if (p.X < x && p.Y == y) return Directions.Right;
+            if (p.X < x && p.Y > y) return Directions.DownRight;
+            if (p.X == x && p.Y < y) return Directions.Down;
+            if (p.X > x && p.Y < y) return Directions.DownLeft;
+            if (p.X > x && p.Y == y) return Directions.Left;
+            if (p.X > x && p.Y > y) return Directions.UpLeft;
+            if (p.X == x && p.Y == y) return Directions.TheSame;
+            throw new InvalidDataException($"Direction could not be determined ({p.X}, {p.Y}) and ({x}, {y})");
         }
     }
 

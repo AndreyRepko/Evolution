@@ -2,23 +2,26 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using Accessibility;
 using Evolution.Game.Model;
 
 namespace Evolution.Game
 {
     public class GameRunner : INotifyPropertyChanged
     {
-        private int _maxX;
-        private int _maxY;
+        private WorldInformation _worldInformation;
+        public int MaxX { get; }
+        public int MaxY { get; }
 
         public ObservableCollection<IBeing> Population { get; } = new ObservableCollection<IBeing>();
 
         public GameRunner(int zavrs, int vegetables, int maxX, int maxY)
         {
-            _maxX = maxX;
-            _maxY = maxY;
+            MaxX = maxX;
+            MaxY = maxY;
             for (var i = 0; i < zavrs; i++)
             {
                 var pos = GetNotOccupiedRandomPosition();
@@ -31,15 +34,17 @@ namespace Evolution.Game
                 Population.Add(new Vegetable(pos));
             }
 
+            _worldInformation = new WorldInformation(this);
+
             NotifyPropertyChanged(nameof(Population));
         }
 
         private Position GetNotOccupiedRandomPosition()
         {
-            var pos = Position.GetRandomPosition(_maxX, _maxY);
+            var pos = Position.GetRandomPosition(MaxX, MaxY);
             while (IsOccupied(pos))
             {
-                pos = Position.GetRandomPosition(_maxX, _maxY);
+                pos = Position.GetRandomPosition(MaxX, MaxY);
             }
 
             return pos;
@@ -61,6 +66,28 @@ namespace Evolution.Game
         protected void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void NextTurn()
+        {
+            foreach (var being in Population.Where(x => x is Zavr).ToList())
+            {
+                (being as Zavr).NextTurn(true, _worldInformation);
+            }
+
+            foreach (var being in Population.Where(x => x is Vegetable))
+            {
+                (being as Vegetable).NextTurn(true);
+            }
+
+        }
+
+        public void Remove(Vegetable food)
+        {
+            if (Population.Contains(food))
+                Population.Remove(food);
+            else
+                throw new ArgumentOutOfRangeException("Item not found, sorry");
         }
     }
 }

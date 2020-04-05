@@ -14,6 +14,7 @@ namespace Evolution.Presenter
 
         private RelayCommand _startNewGameCommand;
         private RelayCommand<Window> _closeWindowCommand;
+        private RelayCommand _nextTurnCommand;
         public int BoardSize => 50;
 
         public GameRunner CurrentGame { get; set; }
@@ -34,6 +35,21 @@ namespace Evolution.Presenter
                 _closeWindowCommand ??= new RelayCommand<Window>(CloseWindow);
                 return _closeWindowCommand;
             }
+        }
+
+        public object NextTurnCommand
+        {
+            get
+            {
+                _nextTurnCommand ??= new RelayCommand(NextTurn);
+                return _nextTurnCommand;
+            }
+        }
+
+        private void NextTurn()
+        {
+            CurrentGame.NextTurn();
+            NotifyPropertyChanged(nameof(CurrentGame));
         }
 
         private void StartNewGame()

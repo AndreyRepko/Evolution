@@ -44,6 +44,7 @@
 
         <StackPanel Grid.Column="1" Grid.Row="0">
             <Button Command = "{Binding StartNewGameCommand}">Start new game</Button>
+            <Button Command = "{Binding NextTurnCommand}">Next turn</Button>
             <Button Command="{Binding CloseWindowCommand, Mode=OneWay}"
                     CommandParameter="{Binding ElementName=ThisWindow}">Exit</Button>
         </StackPanel>
