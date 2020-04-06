@@ -11,7 +11,7 @@ namespace Evolution.Game.Model
     /// specific questions and receive answers.
     /// There are a lot of possibilities to cheat for animals, but, well, why not? :)
     /// </summary>
-    public class WorldInformation : IZavrInformationProvider
+    public class WorldInformation : IZavrWorldInteraction
     {
         private readonly GameRunner _world;
 
@@ -39,7 +39,7 @@ namespace Evolution.Game.Model
             //ToDo : add limitaiton of see
 
             foreach(var item in items)
-                        result.Add((Position.GetRelativePosition(zavrPosition, item.Position.X, item.Position.Y), item.Nutrition));
+                        result.Add((Position.GetRelativePosition(zavrPosition, item.Position.X, item.Position.Y), item.Nutrition, item));
 
             return result;
         }
@@ -58,12 +58,17 @@ namespace Evolution.Game.Model
                 .OrderByDescending(x => x.Nutrition).Any();
         }
 
-        public (Position position, int nutriotion) EatVegitable(Position position)
+        public (Position position, int nutriotion) EatVegetable(Position position)
         {
             var food =  GetWorldAround(position, 1).OfType<Vegetable>()
                 .OrderByDescending(x => x.Nutrition).First();
             _world.Remove(food);
             return (food.Position, food.Nutrition);
+        }
+
+        public void MarkItemAsVictim(object victim, object aggressor)
+        {
+            _world.AddAggression(aggressor, victim);
         }
     }
 }

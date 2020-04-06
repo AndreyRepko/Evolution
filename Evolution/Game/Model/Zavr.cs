@@ -124,7 +124,7 @@ namespace Evolution.Game.Model
         }
 
 
-        public void NextTurn(bool isNormalTurn, IZavrInformationProvider worldInformation)
+        public void NextTurn(bool isNormalTurn, IZavrWorldInteraction world)
         {
             //Okay let's do something :)
             //Here come the algorithm (v 1.0)
@@ -133,29 +133,31 @@ namespace Evolution.Game.Model
             //go into the direction of the food
 
             //Stage 1 : Look around
-            var items = worldInformation.WhatZavrCanSee(Position, _sight, _direction);
+            var items = world.WhatZavrCanSee(Position, _sight, _direction);
 
             if (items.Any())
             {
-                if (worldInformation.CanEat(Position))
+                if (world.CanEat(Position))
                 {
-                    EatFood(worldInformation);
+                    EatFood(world);
                 }
                 else
                 {
                     //Stage 2 : Choose the most valuable tree and go into the direction
-                    var itemDirection = items.OrderByDescending(x => x.nutrition).First().where;
+                    var item = items.OrderByDescending(x => x.nutrition).First();
+
+                    world.MarkItemAsVictim(item.item, this);
 
                     //ToDo: write more clever code
                     int chosenSpeed = 1;
                     if (_maxSpeed != 1)
                         chosenSpeed = RandomNumberGenerator.GetInt32(1, _maxSpeed);
 
-                    MakeMove(worldInformation, chosenSpeed, itemDirection);
+                    MakeMove(world, chosenSpeed, item.where);
                     //If we jump to the food would be fair to eat it ;)
-                    if (worldInformation.CanEat(Position))
+                    if (world.CanEat(Position))
                     {
-                        EatFood(worldInformation);
+                        EatFood(world);
                     }
                 }
             }
@@ -170,15 +172,15 @@ namespace Evolution.Game.Model
             Age += 1;
         }
 
-        private void EatFood(IZavrInformationProvider worldInformation)
+        private void EatFood(IZavrWorldInteraction worldInformation)
         {
-            var food = worldInformation.EatVegitable(Position);
+            var food = worldInformation.EatVegetable(Position);
             _position.X = food.position.X;
             _position.Y = food.position.Y;
             _enerenergy += food.nutriotion * 10; //ToDo: well, how much should we add here?
         }
 
-        private void MakeMove(IZavrInformationProvider worldInformation, in int chosenSpeed, Directions itemDirection)
+        private void MakeMove(IZavrWorldInteraction worldInformation, in int chosenSpeed, Directions itemDirection)
         {
             Position newPosition;
             switch (itemDirection)

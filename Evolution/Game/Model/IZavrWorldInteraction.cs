@@ -8,10 +8,10 @@ namespace Evolution.Game.Model
     /// Information about what Zavr actually can see in the world
     /// Please, take attention that exact distance and if food is aggressive is not available at the moment
     /// </summary>
-    public class SeenItems : List<(Directions where, int nutrition)>
+    public class SeenItems : List<(Directions where, int nutrition, object item)>
     { }
 
-    public interface IZavrInformationProvider
+    public interface IZavrWorldInteraction
     {
         /// <summary>
         /// What the zavr can see.
@@ -24,6 +24,7 @@ namespace Evolution.Game.Model
 
         void CorrectPositionToAllowed(ref Position newPosition);
         bool CanEat(Position position);
-        (Position position, int nutriotion) EatVegitable(Position position);
+        (Position position, int nutriotion) EatVegetable(Position position);
+        void MarkItemAsVictim(object victim, object aggressor);
     }
 }

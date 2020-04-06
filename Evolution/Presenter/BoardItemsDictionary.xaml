@@ -46,7 +46,7 @@
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding Type}" Value="{x:Static model:BeingType.Tree}"/>
-                   <!-- <Condition Binding="{Binding Player}" Value="{x:Static local:Player.White}"/> -->
+                    <Condition Binding="{Binding IsUnderAggression}" Value="False"/>
                 </MultiDataTrigger.Conditions>
                 <MultiDataTrigger.Setters>
                     <Setter Property="Image.Source" Value="http://www.wpclipart.com/recreation/games/chess/chess_set_1/chess_piece_black_rook_T.png" />
@@ -64,6 +64,37 @@
                                 <WrapPanel>
                                     <TextBlock Padding="3">Nutrition</TextBlock>
                                     <TextBlock Padding="3" Text="{Binding Nutrition}"/>
+                                </WrapPanel>
+                            </StackPanel>
+                        </Setter.Value>
+                    </Setter>
+                </MultiDataTrigger.Setters>
+            </MultiDataTrigger>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding Type}" Value="{x:Static model:BeingType.Tree}"/>
+                    <Condition Binding="{Binding IsUnderAggression}" Value="True"/>
+                </MultiDataTrigger.Conditions>
+                <MultiDataTrigger.Setters>
+                    <Setter Property="Image.Source" Value="http://www.wpclipart.com/recreation/games/chess/chess_set_1/chess_piece_white_rook_T.png" />
+                    <Setter Property="ToolTip">
+                        <Setter.Value>
+                            <StackPanel>
+                                <WrapPanel>
+                                    <TextBlock Padding="3">X</TextBlock>
+                                    <TextBlock Padding="3" Text="{Binding Path = Position.X}"/>
+                                </WrapPanel>
+                                <WrapPanel>
+                                    <TextBlock Padding="3">Y</TextBlock>
+                                    <TextBlock Padding="3" Text="{Binding Path = Position.Y}"/>
+                                </WrapPanel>
+                                <WrapPanel>
+                                    <TextBlock Padding="3">Nutrition</TextBlock>
+                                    <TextBlock Padding="3" Text="{Binding Nutrition}"/>
+                                </WrapPanel>
+                                <WrapPanel>
+                                    <TextBlock Padding="3">IsUnderAggression</TextBlock>
+                                    <TextBlock Padding="3" Text="{Binding IsUnderAggression}"/>
                                 </WrapPanel>
                             </StackPanel>
                         </Setter.Value>

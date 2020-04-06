@@ -13,6 +13,8 @@ namespace Evolution.Game
     public class GameRunner : INotifyPropertyChanged
     {
         private WorldInformation _worldInformation;
+        private Dictionary<object, object> _aggressionList = new Dictionary<object, object>();
+
         public int MaxX { get; }
         public int MaxY { get; }
 
@@ -88,6 +90,19 @@ namespace Evolution.Game
                 Population.Remove(food);
             else
                 throw new ArgumentOutOfRangeException("Item not found, sorry");
+        }
+
+        public void AddAggression(object aggressor, object victim)
+        {
+            if (_aggressionList.ContainsKey(aggressor) && _aggressionList[aggressor] != victim)
+            {
+                if (_aggressionList[aggressor] is Vegetable vegetable)
+                    vegetable.NotifyAboutAggressionChange(false);
+            }
+
+            _aggressionList[aggressor] = victim;
+            if (victim is Vegetable vegetable2)
+                vegetable2.NotifyAboutAggressionChange(true);
         }
     }
 }

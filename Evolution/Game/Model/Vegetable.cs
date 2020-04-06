@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Windows.Navigation;
 
 namespace Evolution.Game.Model
 {
@@ -9,8 +8,11 @@ namespace Evolution.Game.Model
         private int _nutrition;
         private readonly Position _position;
         private readonly int _increment;
+        private bool _underAggression;
 
         public int Nutrition => _nutrition;
+
+        public bool IsUnderAggression => _underAggression;
 
         public Vegetable(Position position, int initialNutrition, int increment = 1)
         {
@@ -20,6 +22,12 @@ namespace Evolution.Game.Model
         }
 
         public Vegetable(Position position) : this(position, 1)  { }
+
+        public void NotifyAboutAggressionChange(bool aggression)
+        {
+            _underAggression = aggression;
+            NotifyPropertyChanged(nameof(IsUnderAggression));
+        }
 
         public Position Position => _position;
 
