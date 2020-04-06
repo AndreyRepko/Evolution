@@ -20,18 +20,19 @@ namespace Evolution.Game.Model
             _world = world;
         }
 
-        private IEnumerable<IBeing> GetWorldAround(PositionReadOnly position, int sight)
+        private IEnumerable<IBeing> GetWorldAround(Position position, int sight)
         {
-            for (var x = Math.Min(0, position.X - sight); x < Math.Min(_world.MaxX, position.X + sight); x++)
-            for (var y = Math.Min(0, position.Y - sight); y < Math.Min(_world.MaxY, position.Y + sight); y++)
+            for (var x = Math.Max(0, position.X - sight); x <= Math.Min(_world.MaxX, position.X + sight); x++)
+            for (var y = Math.Max(0, position.Y - sight); y <= Math.Min(_world.MaxY, position.Y + sight); y++)
             {
                 var item = _world.Population.FirstOrDefault(b => b.Position.X == x && b.Position.Y == y);
 
-                yield return item;
+                if (item != null)
+                    yield return item;
             }
         }
 
-        public SeenItems WhatZavrCanSee(PositionReadOnly zavrPosition, int sight, Directions direction)
+        public SeenItems WhatZavrCanSee(Position zavrPosition, int sight, Directions direction)
         {
             var result = new SeenItems();
             var items = GetWorldAround(zavrPosition, sight).OfType<Vegetable>();
@@ -51,12 +52,13 @@ namespace Evolution.Game.Model
             if (newPosition.Y > _world.MaxY) newPosition.Y = _world.MaxY;
         }
 
-        public bool CanEat(PositionReadOnly position)
+        public bool CanEat(Position position)
         {
-            return WhatZavrCanSee(position, 1, Directions.Right).OrderByDescending(x=>x.nutrition).Any();
+            return GetWorldAround(position, 1).OfType<Vegetable>()
+                .OrderByDescending(x => x.Nutrition).Any();
         }
 
-        public (PositionReadOnly position, int nutriotion) EatVegitable(PositionReadOnly position)
+        public (Position position, int nutriotion) EatVegitable(Position position)
         {
             var food =  GetWorldAround(position, 1).OfType<Vegetable>()
                 .OrderByDescending(x => x.Nutrition).First();

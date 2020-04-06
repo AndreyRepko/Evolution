@@ -1,6 +1,8 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Windows.Documents;
 
@@ -43,6 +45,14 @@ namespace Evolution.Game.Model
         public int Age
         {
             get => _age;
+            private set
+            {
+                if (_age != value)
+                {
+                    _age = value;
+                    NotifyPropertyChanged(nameof(Age));
+                }
+            }
         }
 
         public int Energy
@@ -80,7 +90,19 @@ namespace Evolution.Game.Model
         /// <summary>
         /// Position of the Zavr
         /// </summary>
-        public PositionReadOnly Position => _position;
+        public Position Position
+        {
+            get => _position;
+            set
+            {
+                if (!_position.Equals(value))
+                {
+                    _position = value;
+                    NotifyPropertyChanged(nameof(Position));
+                }
+
+            }
+        }
 
         public BeingType Type => BeingType.Zavr;
 
@@ -117,20 +139,25 @@ namespace Evolution.Game.Model
             {
                 if (worldInformation.CanEat(Position))
                 {
-                    var food = worldInformation.EatVegitable(Position);
-                    _position.X = food.position.X;
-                    _position.Y = food.position.Y;
-                    _enerenergy += food.nutriotion * 10; //ToDo: well, how much should we add here?
+                    EatFood(worldInformation);
                 }
-                //Stage 2 : Choose the most valuable tree and go into the direction
-                var itemDirection = items.OrderByDescending(x => x.nutrition).First().where;
+                else
+                {
+                    //Stage 2 : Choose the most valuable tree and go into the direction
+                    var itemDirection = items.OrderByDescending(x => x.nutrition).First().where;
 
-                //ToDo: write more clever code
-                int chosenSpeed =1;
-                if (_maxSpeed != 1)
-                    chosenSpeed = RandomNumberGenerator.GetInt32(1, _maxSpeed);
+                    //ToDo: write more clever code
+                    int chosenSpeed = 1;
+                    if (_maxSpeed != 1)
+                        chosenSpeed = RandomNumberGenerator.GetInt32(1, _maxSpeed);
 
-                MakeMove(worldInformation, chosenSpeed, itemDirection);
+                    MakeMove(worldInformation, chosenSpeed, itemDirection);
+                    //If we jump to the food would be fair to eat it ;)
+                    if (worldInformation.CanEat(Position))
+                    {
+                        EatFood(worldInformation);
+                    }
+                }
             }
             else
             {
@@ -139,6 +166,16 @@ namespace Evolution.Game.Model
                     temp = Directions.Up;
                 _direction = temp;
             }
+
+            Age += 1;
+        }
+
+        private void EatFood(IZavrInformationProvider worldInformation)
+        {
+            var food = worldInformation.EatVegitable(Position);
+            _position.X = food.position.X;
+            _position.Y = food.position.Y;
+            _enerenergy += food.nutriotion * 10; //ToDo: well, how much should we add here?
         }
 
         private void MakeMove(IZavrInformationProvider worldInformation, in int chosenSpeed, Directions itemDirection)
@@ -176,7 +213,7 @@ namespace Evolution.Game.Model
 
             worldInformation.CorrectPositionToAllowed(ref newPosition);
 
-            _position = newPosition;
+            Position = newPosition;
             _enerenergy -= CostOfMovement(chosenSpeed);
         }
 
@@ -188,6 +225,13 @@ namespace Evolution.Game.Model
             if (chosenSpeed == 4) return 100;
             if (chosenSpeed == 5) return 150;
             throw new ArgumentOutOfRangeException(nameof(chosenSpeed), $"Speed is too big {chosenSpeed}");
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

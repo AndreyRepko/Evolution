@@ -54,7 +54,7 @@ namespace Evolution.Presenter
 
         private void StartNewGame()
         {
-            CurrentGame = new GameRunner(10, 10, BoardSize, BoardSize);
+            CurrentGame = new GameRunner(1, 100, BoardSize, BoardSize);
             NotifyPropertyChanged(nameof(CurrentGame));
         }
 

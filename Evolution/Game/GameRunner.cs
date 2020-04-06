@@ -50,7 +50,7 @@ namespace Evolution.Game
             return pos;
         }
 
-        private bool IsOccupied(PositionReadOnly position)
+        private bool IsOccupied(Position position)
         {
             foreach (var being in Population)
             {

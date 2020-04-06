@@ -20,10 +20,10 @@ namespace Evolution.Game.Model
         /// <param name="sight">The sight distance.</param>
         /// <param name="direction">Direction of view of zavr</param>
         /// <returns></returns>
-        SeenItems WhatZavrCanSee(PositionReadOnly zavrPosition, int sight, Directions direction);
+        SeenItems WhatZavrCanSee(Position zavrPosition, int sight, Directions direction);
 
         void CorrectPositionToAllowed(ref Position newPosition);
-        bool CanEat(PositionReadOnly position);
-        (PositionReadOnly position, int nutriotion) EatVegitable(PositionReadOnly position);
+        bool CanEat(Position position);
+        (Position position, int nutriotion) EatVegitable(Position position);
     }
 }
