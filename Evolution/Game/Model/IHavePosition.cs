@@ -1,11 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 
 namespace Evolution.Game.Model
 {
+    [DebuggerDisplay("Position = {X}, {Y}")]
     public class Position : INotifyPropertyChanged
     {
         private int _x;

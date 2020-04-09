@@ -26,6 +26,14 @@ namespace Evolution.Game.Model
             _state = true;
         }
 
+        public Zavr(Position position, int age, bool state, int energy, int maxSpeed, Directions direction) : this(position)
+        {
+            _age = age;
+            _state = state;
+            _maxSpeed = maxSpeed;
+            _direction = direction;
+        }
+
         /// <summary>
         /// Gets or sets the range of sight.
         /// It defines the range object can see at most.
