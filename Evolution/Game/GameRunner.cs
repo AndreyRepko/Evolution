@@ -74,7 +74,10 @@ namespace Evolution.Game
         {
             foreach (var being in Population.Where(x => x is Zavr).ToList())
             {
-                (being as Zavr).NextTurn(true, _worldInformation);
+                if ((being as Zavr).State)
+                {
+                    (being as Zavr).NextTurn(true, _worldInformation);
+                }
             }
 
             foreach (var being in Population.Where(x => x is Vegetable))

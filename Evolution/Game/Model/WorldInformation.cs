@@ -70,5 +70,10 @@ namespace Evolution.Game.Model
         {
             _world.AddAggression(aggressor, victim);
         }
+
+        public void MarkZavrAsDead(Position position)
+        {
+            //To Do: remove Zavr
+        }
     }
 }

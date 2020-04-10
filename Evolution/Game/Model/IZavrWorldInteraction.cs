@@ -26,5 +26,6 @@ namespace Evolution.Game.Model
         bool CanEat(Position position);
         (Position position, int nutriotion) EatVegetable(Position position);
         void MarkItemAsVictim(object victim, object aggressor);
+        void MarkZavrAsDead(Position position);
     }
 }

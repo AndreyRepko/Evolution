@@ -18,12 +18,14 @@ namespace Evolution.Game.Model
         private int _maxSpeed;
         private Directions _direction;
         private BeingType _type;
+        private int _maxAge;
 
         public Zavr(Position position)
         {
             _position = position;
             _age = 1;
             _state = true;
+            _maxAge = 100;
         }
 
         public Zavr(Position position, int age, bool state, int energy, int maxSpeed, Directions direction) : this(position)
@@ -177,7 +179,36 @@ namespace Evolution.Game.Model
                 _direction = temp;
             }
 
-            Age += 1;
+            if (ZavrSurvied())
+            {
+                Age++;
+            }
+            else
+            {
+                KillZavr(world);
+            }
+        }
+
+        private void KillZavr(IZavrWorldInteraction world)
+        {
+            _state = false;
+            world.MarkZavrAsDead(Position);
+        }
+
+        private bool ZavrSurvied()
+        {
+            if (_enerenergy == 0)
+            {
+                return false;
+            }
+            else if (_age >= _maxAge)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         private void EatFood(IZavrWorldInteraction worldInformation)

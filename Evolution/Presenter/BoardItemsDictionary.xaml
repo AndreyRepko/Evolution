@@ -38,6 +38,14 @@
                                     <TextBlock Padding="3">Age</TextBlock>
                                     <TextBlock Padding="3" Text="{Binding Age}"/>
                                 </WrapPanel>
+                                <WrapPanel>
+                                    <TextBlock Padding="3">State</TextBlock>
+                                    <TextBlock Padding="3" Text="{Binding State}"/>
+                                </WrapPanel>
+                                <WrapPanel>
+                                    <TextBlock Padding="3">Direction</TextBlock>
+                                    <TextBlock Padding="3" Text="{Binding Direction}"/>
+                                </WrapPanel>
                             </StackPanel>
                         </Setter.Value>
                     </Setter>
