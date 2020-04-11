@@ -28,9 +28,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Grid Width="1" Height="1">
-                            <Image Width="0.8" Height="0.8" Style="{StaticResource ChessPieceStyle}" />
-                        </Grid>
+                        <ContentControl Width="1" Height="1" Style="{StaticResource EvolutionBoardItem}" Content="{Binding}"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemContainerStyle>

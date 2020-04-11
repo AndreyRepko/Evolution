@@ -9,8 +9,33 @@ namespace Evolution.Game.Model
         private readonly Position _position;
         private readonly int _increment;
         private bool _underAggression;
+        private int _age;
 
-        public int Nutrition => _nutrition;
+        public int Age
+        {
+            get => _age;
+            set
+            {
+                if (value != _age)
+                {
+                    _age = value;
+                    NotifyPropertyChanged(nameof(Age));
+                }
+            }
+        }
+
+        public int Nutrition
+        {
+            get => _nutrition;
+            set
+            {
+                if (value != _nutrition)
+                {
+                    _nutrition = value;
+                    NotifyPropertyChanged(nameof(Nutrition));
+                }
+            }
+        }
 
         public bool IsUnderAggression => _underAggression;
 
@@ -18,6 +43,7 @@ namespace Evolution.Game.Model
         {
             _position = position;
             _nutrition = initialNutrition;
+            _age = 1;
             _increment = increment;
         }
 
@@ -36,10 +62,10 @@ namespace Evolution.Game.Model
         public void NextTurn(bool isNormalTurn)
         {
             if (isNormalTurn)
-                _nutrition += _increment;
+                Nutrition += _increment;
             else
-                _nutrition -= _increment;
-            NotifyPropertyChanged(nameof(Nutrition));
+                Nutrition -= _increment;
+            Age++;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -77,6 +77,9 @@ namespace Evolution.Game
                 if ((being as Zavr).State)
                 {
                     (being as Zavr).NextTurn(true, _worldInformation);
+                    NotifyPropertyChanged();
+                    NotifyPropertyChanged(nameof(Population));
+
                 }
             }
 

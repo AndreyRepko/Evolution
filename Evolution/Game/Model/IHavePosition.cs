@@ -73,6 +73,8 @@ namespace Evolution.Game.Model
 
         public override bool Equals(object? obj)
         {
+            if (obj == null) return false;
+
             //Check for null and compare run-time types.
             if (!(obj is Position))
             {

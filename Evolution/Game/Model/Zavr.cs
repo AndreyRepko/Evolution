@@ -17,7 +17,6 @@ namespace Evolution.Game.Model
         private bool _state;
         private int _maxSpeed;
         private Directions _direction;
-        private BeingType _type;
         private int _maxAge;
 
         public Zavr(Position position)
@@ -79,6 +78,14 @@ namespace Evolution.Game.Model
         public bool State
         {
             get => _state;
+            set
+            {
+                if (value != _state)
+                {
+                    _state = value;
+                    NotifyPropertyChanged(nameof(State));
+                }
+            }
         }
 
         public int Speed
@@ -187,11 +194,13 @@ namespace Evolution.Game.Model
             {
                 KillZavr(world);
             }
+
+            NotifyPropertyChanged();
         }
 
         private void KillZavr(IZavrWorldInteraction world)
         {
-            _state = false;
+            State = false;
             world.MarkZavrAsDead(Position);
         }
 

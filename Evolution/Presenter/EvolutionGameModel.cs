@@ -7,6 +7,10 @@ namespace Evolution.Presenter
 {
     public class EvolutionGameModel : INotifyPropertyChanged
     {
+        private const int _boardSize = 50;
+        private const int _initialZavrsCount = 1;
+        private const int _initialTreesCount = 100;
+
         public  EvolutionGameModel()
         {
             StartNewGame();
@@ -15,7 +19,7 @@ namespace Evolution.Presenter
         private RelayCommand _startNewGameCommand;
         private RelayCommand<Window> _closeWindowCommand;
         private RelayCommand _nextTurnCommand;
-        public int BoardSize => 50;
+        public int BoardSize => _boardSize;
 
         public GameRunner CurrentGame { get; set; }
 
@@ -54,7 +58,7 @@ namespace Evolution.Presenter
 
         private void StartNewGame()
         {
-            CurrentGame = new GameRunner(5, 100, BoardSize, BoardSize);
+            CurrentGame = new GameRunner(_initialZavrsCount, _initialTreesCount, BoardSize, BoardSize);
             NotifyPropertyChanged(nameof(CurrentGame));
         }
 
