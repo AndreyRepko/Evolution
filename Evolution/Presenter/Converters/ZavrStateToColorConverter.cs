@@ -15,7 +15,7 @@ namespace Evolution.Presenter.Converters
 
             if ((bool)value)
                 return 0;
-            return 0.01;
+            return 0.1;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

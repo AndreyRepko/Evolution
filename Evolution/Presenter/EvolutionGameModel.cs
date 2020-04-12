@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Windows;
 using Evolution.Game;
+using Evolution.Game.Model;
 
 namespace Evolution.Presenter
 {
