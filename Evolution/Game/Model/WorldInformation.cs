@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Evolution.Game.Model
@@ -11,7 +12,7 @@ namespace Evolution.Game.Model
     /// specific questions and receive answers.
     /// There are a lot of possibilities to cheat for animals, but, well, why not? :)
     /// </summary>
-    public class WorldInformation : IZavrWorldInteraction
+    public class WorldInformation : IZavrWorldInteraction, IVegetetableWorldInteraction 
     {
         private readonly GameRunner _world;
 
@@ -74,6 +75,14 @@ namespace Evolution.Game.Model
         public void MarkZavrAsDead(Position position)
         {
             //To Do: remove Zavr
+        }
+
+        public void SpawnNewVegetable(Position position, Directions directions)
+        {
+            var newPosition = position.MoveInDirection(directions, RandomNumberGenerator.GetInt32(1, 6));
+            CorrectPositionToAllowed(ref newPosition);
+
+            _world.AddNewVegetable(newPosition);
         }
     }
 }

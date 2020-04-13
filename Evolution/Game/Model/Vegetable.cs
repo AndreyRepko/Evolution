@@ -60,7 +60,7 @@ namespace Evolution.Game.Model
 
         public BeingType Type => BeingType.Tree;
 
-        public void NextTurn(bool isNormalTurn)
+        public void NextTurn(bool isNormalTurn, IVegetetableWorldInteraction world)
         {
             if (isNormalTurn)
                 Nutrition += _increment;
@@ -74,7 +74,8 @@ namespace Evolution.Game.Model
               var random  = RandomNumberGenerator.GetInt32(1, 4);
                 if (random == 1)
                 {
-                   // SpawnNewVegetable();
+                    world.SpawnNewVegetable(Position, (Directions)RandomNumberGenerator.GetInt32(1, 9));
+                    Nutrition -= 1;
                 }
             }
 

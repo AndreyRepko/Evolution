@@ -238,39 +238,9 @@ namespace Evolution.Game.Model
 
         private void MakeMove(IZavrWorldInteraction worldInformation, in int chosenSpeed, Directions itemDirection)
         {
-            Position newPosition;
-            switch (itemDirection)
-            {
-                case Directions.Up:
-                    newPosition = new Position(Position.X, Position.Y - chosenSpeed);
-                    break;
-                case Directions.UpRight:
-                    newPosition = new Position(Position.X + chosenSpeed, Position.Y - chosenSpeed);
-                    break;
-                case Directions.Right:
-                    newPosition = new Position(Position.X + chosenSpeed, Position.Y);
-                    break;
-                case Directions.DownRight:
-                    newPosition = new Position(Position.X + chosenSpeed, Position.Y + chosenSpeed);
-                    break;
-                case Directions.Down:
-                    newPosition = new Position(Position.X, Position.Y + chosenSpeed);
-                    break;
-                case Directions.DownLeft:
-                    newPosition = new Position(Position.X - chosenSpeed, Position.Y + chosenSpeed);
-                    break;
-                case Directions.Left:
-                    newPosition = new Position(Position.X - chosenSpeed, Position.Y);
-                    break;
-                case Directions.UpLeft:
-                    newPosition = new Position(Position.X - chosenSpeed, Position.Y - chosenSpeed);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(itemDirection), itemDirection, null);
-            }
-
+            var newPosition = Position.MoveInDirection(itemDirection, chosenSpeed);
             worldInformation.CorrectPositionToAllowed(ref newPosition);
-
+            
             Position = newPosition;
             _enerenergy -= CostOfMovement(chosenSpeed);
         }

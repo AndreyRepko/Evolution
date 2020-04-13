@@ -83,9 +83,9 @@ namespace Evolution.Game
                 }
             }
 
-            foreach (var being in Population.Where(x => x is Vegetable))
+            foreach (var being in Population.Where(x => x is Vegetable).ToList())
             {
-                (being as Vegetable).NextTurn(true);
+                (being as Vegetable).NextTurn(true, _worldInformation);
             }
 
         }
@@ -110,5 +110,13 @@ namespace Evolution.Game
             if (victim is Vegetable vegetable2)
                 vegetable2.NotifyAboutAggressionChange(true);
         }
-    }
+
+        internal void AddNewVegetable(Position newPosition)
+        {
+            if (!IsOccupied(newPosition))
+            {
+                Population.Add(new Vegetable(newPosition));
+            }
+        }
+    }   
 }

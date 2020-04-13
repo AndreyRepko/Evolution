@@ -9,7 +9,7 @@ namespace Evolution.Presenter
     public class EvolutionGameModel : INotifyPropertyChanged
     {
         private const int _boardSize = 50;
-        private const int _initialZavrsCount = 1;
+        private const int _initialZavrsCount = 20;
         private const int _initialTreesCount = 100;
 
         public  EvolutionGameModel()
