@@ -6,7 +6,7 @@ namespace Evolution.Game.Model
 {
     public enum Directions
     {
-        None =0,
+        None = 0,
         Up = 1,
         UpRight = 2,
         Right = 3,

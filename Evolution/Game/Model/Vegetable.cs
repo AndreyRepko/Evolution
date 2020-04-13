@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 
 namespace Evolution.Game.Model
 {
@@ -65,7 +66,18 @@ namespace Evolution.Game.Model
                 Nutrition += _increment;
             else
                 Nutrition -= _increment;
+
             Age++;
+
+            if (Age > 10)
+            {
+              var random  = RandomNumberGenerator.GetInt32(1, 4);
+                if (random == 1)
+                {
+                   // SpawnNewVegetable();
+                }
+            }
+
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

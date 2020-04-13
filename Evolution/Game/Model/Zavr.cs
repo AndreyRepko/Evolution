@@ -165,12 +165,9 @@ namespace Evolution.Game.Model
 
                     world.MarkItemAsVictim(item.item, this);
 
-                    //ToDo: write more clever code
-                    int chosenSpeed = 1;
-                    if (_maxSpeed != 1)
-                        chosenSpeed = RandomNumberGenerator.GetInt32(1, _maxSpeed);
+                    var chosenSpeed = RandomNumberGenerator.GetInt32(1, _maxSpeed + 1);
 
-                    MakeMove(world, chosenSpeed, item.where);
+                    MakeMove(world, chosenSpeed, item.where); // это походить
                     //If we jump to the food would be fair to eat it ;)
                     if (world.CanEat(Position))
                     {
@@ -180,10 +177,21 @@ namespace Evolution.Game.Model
             }
             else
             {
-                var temp = _direction + 1;
-                if (temp > Directions.UpLeft) //Cruel hack, but should work
-                    temp = Directions.Up;
-                _direction = temp;
+                var RandomChoice = RandomNumberGenerator.GetInt32(1, 3);
+                if (RandomChoice == 1)
+                {
+                    var temp = _direction + 1;
+                    if (temp > Directions.UpLeft) //Cruel hack, but should work
+                        temp = Directions.Up;
+                    _direction = temp;
+                    Energy -= 5;
+                }
+                else
+                {
+                      var chosenSpeed = RandomNumberGenerator.GetInt32(1, _maxSpeed + 1);
+
+                    MakeMove(world, chosenSpeed, (Directions)RandomNumberGenerator.GetInt32(1, 9));
+                }
             }
 
             if (ZavrSurvied())
