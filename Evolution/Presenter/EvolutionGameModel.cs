@@ -2,7 +2,6 @@
 using System.Runtime.CompilerServices;
 using System.Windows;
 using Evolution.Game;
-using Evolution.Game.Model;
 
 namespace Evolution.Presenter
 {
@@ -20,6 +19,7 @@ namespace Evolution.Presenter
         private RelayCommand _startNewGameCommand;
         private RelayCommand<Window> _closeWindowCommand;
         private RelayCommand _nextTurnCommand;
+
         public int BoardSize => _boardSize;
 
         public GameRunner CurrentGame { get; set; }

@@ -14,11 +14,24 @@ namespace Evolution.Game
     {
         private WorldInformation _worldInformation;
         private Dictionary<object, object> _aggressionList = new Dictionary<object, object>();
+        private int _day;
 
         public int MaxX { get; }
         public int MaxY { get; }
 
         public ObservableCollection<IBeing> Population { get; } = new ObservableCollection<IBeing>();
+        public int Day
+        {
+            get { return _day; }
+            set
+            {
+                if (_day != value)
+                {
+                    _day = value;
+                    NotifyPropertyChanged(nameof(Day));
+                }
+            }
+        }
 
         public GameRunner(int zavrs, int vegetables, int maxX, int maxY)
         {
@@ -37,6 +50,8 @@ namespace Evolution.Game
             }
 
             _worldInformation = new WorldInformation(this);
+
+            Day = 0;
 
             NotifyPropertyChanged(nameof(Population));
         }
@@ -79,7 +94,6 @@ namespace Evolution.Game
                     (being as Zavr).NextTurn(true, _worldInformation);
                     NotifyPropertyChanged();
                     NotifyPropertyChanged(nameof(Population));
-
                 }
             }
 
@@ -88,6 +102,7 @@ namespace Evolution.Game
                 (being as Vegetable).NextTurn(true, _worldInformation);
             }
 
+            Day++;
         }
 
         public void Remove(Vegetable food)
@@ -118,5 +133,5 @@ namespace Evolution.Game
                 Population.Add(new Vegetable(newPosition));
             }
         }
-    }   
+    }
 }

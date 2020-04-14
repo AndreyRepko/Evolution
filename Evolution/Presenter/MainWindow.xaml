@@ -48,7 +48,10 @@
         </StackPanel>
         <StatusBar Grid.Row="1" Grid.Column ="0" Grid.ColumnSpan="2">
             <StatusBarItem>
-                <TextBlock Text="Some stuff" />
+                <TextBlock>
+                    <TextBlock Text="Day : "/>
+                    <TextBlock Text="{Binding CurrentGame.Day}"/>
+                </TextBlock>
             </StatusBarItem>
             <StatusBarItem>
                 <Rectangle VerticalAlignment="Stretch" Fill="Blue" Width="1"/>
