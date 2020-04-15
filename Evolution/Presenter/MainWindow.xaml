@@ -41,9 +41,13 @@
         </Viewbox>
 
         <StackPanel Grid.Column="1" Grid.Row="0">
-            <Button Command = "{Binding StartNewGameCommand}">Start new game</Button>
-            <Button Command = "{Binding NextTurnCommand}">Next turn</Button>
-            <Button Command="{Binding CloseWindowCommand, Mode=OneWay}"
+            <Button Margin ="5" Command = "{Binding StartNewGameCommand}">Start new game</Button>
+            <Button Margin ="5" Command = "{Binding NextTurnCommand}">Next turn</Button>
+            <WrapPanel>
+                <TextBox Margin ="5" Text = "{Binding DaysCount}"/>
+
+            </WrapPanel>
+            <Button Margin ="5" Command="{Binding CloseWindowCommand, Mode=OneWay}"
                     CommandParameter="{Binding ElementName=ThisWindow}">Exit</Button>
         </StackPanel>
         <StatusBar Grid.Row="1" Grid.Column ="0" Grid.ColumnSpan="2">

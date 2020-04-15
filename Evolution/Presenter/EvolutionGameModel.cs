@@ -19,6 +19,7 @@ namespace Evolution.Presenter
         private RelayCommand _startNewGameCommand;
         private RelayCommand<Window> _closeWindowCommand;
         private RelayCommand _nextTurnCommand;
+        private int _daysCount = 1;
 
         public int BoardSize => _boardSize;
 
@@ -49,6 +50,13 @@ namespace Evolution.Presenter
                 _nextTurnCommand ??= new RelayCommand(NextTurn);
                 return _nextTurnCommand;
             }
+        }
+
+        public int DaysCount
+        {
+            get { return _daysCount; }
+            set { _daysCount = value; }
+
         }
 
         private void NextTurn()
