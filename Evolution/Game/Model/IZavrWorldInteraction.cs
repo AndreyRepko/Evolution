@@ -27,5 +27,6 @@ namespace Evolution.Game.Model
         (Position position, int nutriotion) EatVegetable(Position position);
         void MarkItemAsVictim(object victim, object aggressor);
         void MarkZavrAsDead(Position position);
+        void SpawnNewZavr(Position position, int speed, int sight, Directions directions);
     }
 }

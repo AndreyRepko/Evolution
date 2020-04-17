@@ -12,26 +12,20 @@ namespace Evolution.Presenter.Converters
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (values.Length != 2)
-                throw new ArgumentException("Two values are expected");
+            if (values.Length != 4)
+                throw new ArgumentException("4 values are expected");
 
             var age = (int) values[0];
             var energy = (int) values[1];
+            var speed = (int) values[2];
+            var sight = (int) values[3];
 
             Color color;
-            color = new Color();
-            if (energy < 1000)
-                color = Colors.Red;
-            else if (age < 10)
-                color = Colors.PaleVioletRed;
-            else if (age < 25)
-                color = Colors.IndianRed;
-            else if (age < 50)
-                color = Colors.MediumVioletRed;
-            else if (age < 80)
-                color = Colors.OrangeRed;
-            else
-                color = Colors.DarkRed;
+            color = Color.FromRgb((byte)(50 + 20 * sight), 0, (byte)(50 + 20 * speed));
+            if (age == 100)
+            {
+                color = Color.FromRgb(250, 0, 0);
+            }
 
             return new SolidColorBrush(color);
         }

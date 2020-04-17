@@ -49,8 +49,8 @@ namespace Evolution.Game.Model
         {
             if (newPosition.X < 0) newPosition.X = 0;
             if (newPosition.Y < 0) newPosition.Y = 0;
-            if (newPosition.X > _world.MaxX) newPosition.X = _world.MaxX;
-            if (newPosition.Y > _world.MaxY) newPosition.Y = _world.MaxY;
+            if (newPosition.X >= _world.MaxX) newPosition.X = _world.MaxX - 1;
+            if (newPosition.Y >= _world.MaxY) newPosition.Y = _world.MaxY - 1;
         }
 
         public bool CanEat(Position position)
@@ -74,7 +74,7 @@ namespace Evolution.Game.Model
 
         public void MarkZavrAsDead(Position position)
         {
-            //To Do: remove Zavr
+            _world.Remove(position);   
         }
 
         public void SpawnNewVegetable(Position position, Directions directions)
@@ -83,6 +83,14 @@ namespace Evolution.Game.Model
             CorrectPositionToAllowed(ref newPosition);
 
             _world.AddNewVegetable(newPosition);
+        }
+
+        public void SpawnNewZavr(Position position, int speed, int sight, Directions directions)
+        {
+            var newPosition = position.MoveInDirection(directions, RandomNumberGenerator.GetInt32(1, 2));
+            CorrectPositionToAllowed(ref newPosition);
+
+            _world.AddNewZavr(newPosition, speed, sight);
         }
     }
 }

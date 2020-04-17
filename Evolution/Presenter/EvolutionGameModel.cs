@@ -61,8 +61,11 @@ namespace Evolution.Presenter
 
         private void NextTurn()
         {
-            CurrentGame.NextTurn();
-            NotifyPropertyChanged(nameof(CurrentGame));
+            for (var i = 0; i < DaysCount; i++)
+            {
+                CurrentGame.NextTurn();
+                NotifyPropertyChanged(nameof(CurrentGame));
+            }
         }
 
         private void StartNewGame()

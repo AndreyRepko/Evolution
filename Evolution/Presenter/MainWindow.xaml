@@ -44,7 +44,8 @@
             <Button Margin ="5" Command = "{Binding StartNewGameCommand}">Start new game</Button>
             <Button Margin ="5" Command = "{Binding NextTurnCommand}">Next turn</Button>
             <WrapPanel>
-                <TextBox Margin ="5" Text = "{Binding DaysCount}"/>
+                <TextBlock Margin="5">Days Count: </TextBlock>
+                <TextBox Margin ="5" Width="25" Text = "{Binding DaysCount}"/>
 
             </WrapPanel>
             <Button Margin ="5" Command="{Binding CloseWindowCommand, Mode=OneWay}"

@@ -105,6 +105,12 @@ namespace Evolution.Game
             Day++;
         }
 
+        internal void Remove(Position position)
+        {
+            var item = Population.First(x => x.Position.Equals(position));
+            Population.Remove(item);
+        }
+
         public void Remove(Vegetable food)
         {
             if (Population.Contains(food))
@@ -124,6 +130,14 @@ namespace Evolution.Game
             _aggressionList[aggressor] = victim;
             if (victim is Vegetable vegetable2)
                 vegetable2.NotifyAboutAggressionChange(true);
+        }
+
+        internal void AddNewZavr(Position newPosition, int speed, int sight)
+        {
+            if (!IsOccupied(newPosition))
+            {
+                Population.Add(new Zavr(newPosition, 1, true, 2500, speed, Directions.Up, sight));
+            }
         }
 
         internal void AddNewVegetable(Position newPosition)

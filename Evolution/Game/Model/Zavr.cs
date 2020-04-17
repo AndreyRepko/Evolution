@@ -13,11 +13,12 @@ namespace Evolution.Game.Model
         private int _sight;
         private Position _position;
         private int _age;
-        private int _enerenergy;
+        private int _energy;
         private bool _state;
-        private int _maxSpeed;
+        private int _speed;
         private Directions _direction;
         private int _maxAge;
+        private int _maxEnergy;
 
         public Zavr(Position position)
         {
@@ -25,14 +26,18 @@ namespace Evolution.Game.Model
             _age = 1;
             _state = true;
             _maxAge = 100;
+            _maxEnergy = 5000;
+            _energy = 3000;
         }
 
-        public Zavr(Position position, int age, bool state, int energy, int maxSpeed, Directions direction) : this(position)
+        public Zavr(Position position, int age, bool state, int energy, int speed, Directions direction, int sight) : this(position)
         {
             _age = age;
             _state = state;
-            _maxSpeed = maxSpeed;
+            _speed = speed;
             _direction = direction;
+            _energy = energy;
+            _sight = sight;
         }
 
         /// <summary>
@@ -45,9 +50,11 @@ namespace Evolution.Game.Model
             get => _sight;
             set
             {
-                if (value < 1 || value > 10)
-                    throw new InvalidDataException("Sight must be in 1..10 range");
-                _sight = value;
+                if (_sight != value)
+                {
+                    _sight = value;
+                    NotifyPropertyChanged(nameof(Sight));
+                }
             }
         }
 
@@ -66,12 +73,12 @@ namespace Evolution.Game.Model
 
         public int Energy
         {
-            get => _enerenergy;
+            get => _energy;
             set
             {
-                if (value < 0 || value > 10000)
+                if (value < 0 || value > 100000)
                     throw new InvalidDataException("enerenergy must be in 1..1 range");
-                _enerenergy = value;
+                _energy = value;
             }
         }
 
@@ -87,18 +94,20 @@ namespace Evolution.Game.Model
                 }
             }
         }
-
+        
         public int Speed
         {
-            get => _maxSpeed;
+            get => _speed;
             set
             {
-                if (value < 1 || value > 5)
-                    throw new InvalidDataException("speed must be in 5..5 range");
-                _maxSpeed = value;
+                if (_speed != value)
+                {
+                    _speed = value;
+                    NotifyPropertyChanged(nameof(Speed));
+                }
             }
         }
-
+        
         public Directions Direction
         {
             get => _direction;
@@ -135,8 +144,7 @@ namespace Evolution.Game.Model
         {
             var zavr = new Zavr(position);
             zavr._sight = RandomNumberGenerator.GetInt32(1, 10);
-            zavr._enerenergy = 3000;
-            zavr._maxSpeed = RandomNumberGenerator.GetInt32(1, 5);
+            zavr._speed = RandomNumberGenerator.GetInt32(1, 5);
             return zavr;
         }
 
@@ -165,7 +173,7 @@ namespace Evolution.Game.Model
 
                     world.MarkItemAsVictim(item.item, this);
 
-                    var chosenSpeed = RandomNumberGenerator.GetInt32(1, _maxSpeed + 1);
+                    var chosenSpeed = RandomNumberGenerator.GetInt32(1, _speed + 1);
 
                     MakeMove(world, chosenSpeed, item.where); // это походить
                     //If we jump to the food would be fair to eat it ;)
@@ -177,7 +185,7 @@ namespace Evolution.Game.Model
             }
             else
             {
-                var RandomChoice = RandomNumberGenerator.GetInt32(1, 3);
+                var RandomChoice = RandomNumberGenerator.GetInt32(1, 4);
                 if (RandomChoice == 1)
                 {
                     var temp = _direction + 1;
@@ -188,7 +196,7 @@ namespace Evolution.Game.Model
                 }
                 else
                 {
-                      var chosenSpeed = RandomNumberGenerator.GetInt32(1, _maxSpeed + 1);
+                    var chosenSpeed = RandomNumberGenerator.GetInt32(1, _speed + 1);
 
                     MakeMove(world, chosenSpeed, (Directions)RandomNumberGenerator.GetInt32(1, 9));
                 }
@@ -203,7 +211,35 @@ namespace Evolution.Game.Model
                 KillZavr(world);
             }
 
+            if (Energy >= _maxEnergy)
+            {
+                var newSpeed = GetNewSpeed(_speed);
+                var newSight = GetNewSight(_sight);
+                world.SpawnNewZavr(Position, newSpeed, newSight, (Directions)RandomNumberGenerator.GetInt32(1, 9));
+                Energy -= _maxEnergy/2;
+            }
+
             NotifyPropertyChanged();
+        }
+
+        private int GetNewSight(int sight)
+        {
+            var newSight = sight + RandomTransformer.GetChange();
+            if (newSight < 1)
+            {
+                newSight = 1;
+            }
+            return newSight;
+        }
+
+        private int GetNewSpeed(int speed)
+        {
+            var newSpeed = speed + RandomTransformer.GetChange();
+            if (newSpeed < 1)
+            {
+                newSpeed = 1;
+            }
+            return newSpeed;
         }
 
         private void KillZavr(IZavrWorldInteraction world)
@@ -214,7 +250,7 @@ namespace Evolution.Game.Model
 
         private bool ZavrSurvied()
         {
-            if (_enerenergy == 0)
+            if (_energy <= 0)
             {
                 return false;
             }
@@ -233,7 +269,7 @@ namespace Evolution.Game.Model
             var food = worldInformation.EatVegetable(Position);
             _position.X = food.position.X;
             _position.Y = food.position.Y;
-            _enerenergy += food.nutriotion * 10; //ToDo: well, how much should we add here?
+            _energy += food.nutriotion * 5; //ToDo: well, how much should we add here?
         }
 
         private void MakeMove(IZavrWorldInteraction worldInformation, in int chosenSpeed, Directions itemDirection)
@@ -242,17 +278,13 @@ namespace Evolution.Game.Model
             worldInformation.CorrectPositionToAllowed(ref newPosition);
             
             Position = newPosition;
-            _enerenergy -= CostOfMovement(chosenSpeed);
+            _energy -= CostOfMovement(chosenSpeed);
         }
 
         private int CostOfMovement(in int chosenSpeed)
         {
-            if (chosenSpeed == 1) return 10;
-            if (chosenSpeed == 2) return 30;
-            if (chosenSpeed == 3) return 60;
-            if (chosenSpeed == 4) return 100;
-            if (chosenSpeed == 5) return 150;
-            throw new ArgumentOutOfRangeException(nameof(chosenSpeed), $"Speed is too big {chosenSpeed}");
+            var energy = (int)Math.Pow(chosenSpeed, 2) * 10;
+            return energy;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -24,6 +24,8 @@
                                         <MultiBinding Converter="{StaticResource ZavrHealthToColorConverter}">
                                             <Binding Path="Age"/>
                                             <Binding Path="Energy"/>
+                                            <Binding Path="Speed"/>
+                                            <Binding Path="Sight"/>
                                         </MultiBinding>
                                     </Polygon.Fill>
                                     <Polygon.ToolTip>
