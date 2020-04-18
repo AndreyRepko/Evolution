@@ -46,7 +46,10 @@
             <WrapPanel>
                 <TextBlock Margin="5">Days Count: </TextBlock>
                 <TextBox Margin ="5" Width="25" Text = "{Binding DaysCount}"/>
-
+            </WrapPanel> 
+            <WrapPanel>
+                <TextBlock Margin="5">Nutrition: </TextBlock>
+                <TextBox Margin ="5" Width="25" Text = "{Binding EnergyBoxNutrition}"/>
             </WrapPanel>
             <Button Margin ="5" Command="{Binding CloseWindowCommand, Mode=OneWay}"
                     CommandParameter="{Binding ElementName=ThisWindow}">Exit</Button>

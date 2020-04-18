@@ -18,7 +18,7 @@ namespace Evolution.Game
 
         public int MaxX { get; }
         public int MaxY { get; }
-
+        public int EnergyBoxNutrition { get; set; }
         public ObservableCollection<IBeing> Population { get; } = new ObservableCollection<IBeing>();
         public int Day
         {
@@ -33,10 +33,11 @@ namespace Evolution.Game
             }
         }
 
-        public GameRunner(int zavrs, int vegetables, int maxX, int maxY)
+        public GameRunner(int zavrs, int vegetables, int energyBox, int maxX, int maxY, int energyBoxNutrition)
         {
             MaxX = maxX;
             MaxY = maxY;
+            EnergyBoxNutrition = energyBoxNutrition;
             for (var i = 0; i < zavrs; i++)
             {
                 var pos = GetNotOccupiedRandomPosition();
@@ -47,6 +48,12 @@ namespace Evolution.Game
             {
                 var pos = GetNotOccupiedRandomPosition();
                 Population.Add(new Vegetable(pos));
+            }
+
+            for (var i = 0; i < energyBox; i++)
+            {
+                var pos = GetNotOccupiedRandomPosition();
+                Population.Add(new EnergyBox(pos, EnergyBoxNutrition));
             }
 
             _worldInformation = new WorldInformation(this);
@@ -102,7 +109,21 @@ namespace Evolution.Game
                 (being as Vegetable).NextTurn(true, _worldInformation);
             }
 
+            if (Day %10 == 0)
+            {
+                SpawnEnergyBoxes();
+            }
+
             Day++;
+        }
+
+        private void SpawnEnergyBoxes()
+        {
+            for (var i = 0; i < 50; i++)
+            {
+                var pos = GetNotOccupiedRandomPosition();
+                Population.Add(new EnergyBox(pos, EnergyBoxNutrition));
+            }
         }
 
         internal void Remove(Position position)

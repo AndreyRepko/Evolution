@@ -5,6 +5,7 @@
     <converters:ZavrToColorConverter x:Key="ZavrHealthToColorConverter" />
     <converters:ZavrStateToColorConverter x:Key="ZavrStateToColorConverter" />
     <converters:TreeToColorConverter x:Key="TreeToColorConverter" />
+    <converters:EnergyBoxToColorConverter x:Key="EnergyBoxToColorConverter" />
     <Style x:Key="EvolutionBoardItem" TargetType ="{x:Type ContentControl}">
         <Style.Triggers>
             <MultiDataTrigger>
@@ -102,6 +103,43 @@
                                         </StackPanel>
                                     </Polygon.ToolTip>
                                    </Polygon>
+                            </DataTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </MultiDataTrigger.Setters>
+            </MultiDataTrigger>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding Type}" Value="{x:Static model:BeingType.EnergyBox }"/>
+                    <!--<Condition Binding="{Binding Player}" Value="{x:Static local:Player.White}"/> -->
+                </MultiDataTrigger.Conditions>
+                <MultiDataTrigger.Setters>
+                    <Setter Property="ContentTemplate">
+                        <Setter.Value>
+                            <DataTemplate DataType='{x:Type model:EnergyBox}'>
+                                <Polygon Points="0.1,0.5 0.5,0.5, 0.9,0.1 0.1,0.1">
+                                    <Polygon.Fill>
+                                        <MultiBinding Converter="{StaticResource EnergyBoxToColorConverter}">
+
+                                        </MultiBinding>
+                                    </Polygon.Fill>
+                                    <Polygon.ToolTip>
+                                        <StackPanel>
+                                            <WrapPanel>
+                                                <TextBlock Padding="3">X</TextBlock>
+                                                <TextBlock Padding="3" Text="{Binding Path = Position.X}"/>
+                                            </WrapPanel>
+                                            <WrapPanel>
+                                                <TextBlock Padding="3">Y</TextBlock>
+                                                <TextBlock Padding="3" Text="{Binding Path = Position.Y}"/>
+                                            </WrapPanel>
+                                            <WrapPanel>
+                                                <TextBlock Padding="3">Nutrition</TextBlock>
+                                                <TextBlock Padding="3" Text="{Binding Nutrition}"/>
+                                            </WrapPanel>
+                                        </StackPanel>
+                                    </Polygon.ToolTip>
+                                </Polygon>
                             </DataTemplate>
                         </Setter.Value>
                     </Setter>

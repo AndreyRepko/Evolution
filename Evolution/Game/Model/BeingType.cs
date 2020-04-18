@@ -11,6 +11,7 @@ namespace Evolution.Game.Model
         BigTree,
         SmallZavr,
         Zavr,
-        BigZavr
+        BigZavr,
+        EnergyBox
     }
 }

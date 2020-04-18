@@ -36,7 +36,7 @@ namespace Evolution.Game.Model
         public SeenItems WhatZavrCanSee(Position zavrPosition, int sight, Directions direction)
         {
             var result = new SeenItems();
-            var items = GetWorldAround(zavrPosition, sight).OfType<Vegetable>();
+            var items = GetWorldAround(zavrPosition, sight).OfType<EnergyBox>();
             //ToDo : add limitaiton of see
 
             foreach(var item in items)
@@ -55,15 +55,15 @@ namespace Evolution.Game.Model
 
         public bool CanEat(Position position)
         {
-            return GetWorldAround(position, 1).OfType<Vegetable>()
+            return GetWorldAround(position, 1).OfType<EnergyBox>()
                 .OrderByDescending(x => x.Nutrition).Any();
         }
 
         public (Position position, int nutriotion) EatVegetable(Position position)
         {
-            var food =  GetWorldAround(position, 1).OfType<Vegetable>()
+            var food =  GetWorldAround(position, 1).OfType<EnergyBox>()
                 .OrderByDescending(x => x.Nutrition).First();
-            _world.Remove(food);
+            _world.Remove(food.Position);
             return (food.Position, food.Nutrition);
         }
 

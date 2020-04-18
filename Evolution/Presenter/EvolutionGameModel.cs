@@ -9,7 +9,8 @@ namespace Evolution.Presenter
     {
         private const int _boardSize = 50;
         private const int _initialZavrsCount = 20;
-        private const int _initialTreesCount = 100;
+        private const int _initialTreesCount = 0;
+        private const int _initialEnergyBoxCount = 100;
 
         public  EvolutionGameModel()
         {
@@ -20,6 +21,7 @@ namespace Evolution.Presenter
         private RelayCommand<Window> _closeWindowCommand;
         private RelayCommand _nextTurnCommand;
         private int _daysCount = 1;
+        private int _energyBoxNutrition = 50;
 
         public int BoardSize => _boardSize;
 
@@ -58,6 +60,16 @@ namespace Evolution.Presenter
             set { _daysCount = value; }
 
         }
+        public int EnergyBoxNutrition
+        {
+            get { return _energyBoxNutrition; }
+            set 
+            {
+                _energyBoxNutrition = value;
+                CurrentGame.EnergyBoxNutrition = _energyBoxNutrition;
+            }
+
+        }
 
         private void NextTurn()
         {
@@ -70,7 +82,7 @@ namespace Evolution.Presenter
 
         private void StartNewGame()
         {
-            CurrentGame = new GameRunner(_initialZavrsCount, _initialTreesCount, BoardSize, BoardSize);
+            CurrentGame = new GameRunner(_initialZavrsCount, _initialTreesCount, _initialEnergyBoxCount, BoardSize, BoardSize, EnergyBoxNutrition);
             NotifyPropertyChanged(nameof(CurrentGame));
         }
 
