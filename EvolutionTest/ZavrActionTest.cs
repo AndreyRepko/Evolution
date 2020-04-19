@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO.Compression;
 using System.Windows.Controls;
 using Evolution.Game.Model;
+using Evolution.Game.Model.Positions;
 using Moq;
 using NUnit.Framework;
 
@@ -21,7 +22,7 @@ namespace EvolutionTest
         {
             //Arrange
             var position = new Position(10,10);
-            var zavr = new Zavr(position, 1, true, 200, 1, Directions.Up);
+            var zavr = new Zavr(position, 1, true, 200, 1, Directions.Up, 5);
 
             var world = new Mock<IZavrWorldInteraction>();
             world.Setup(x => x.CanEat(position)).Returns(true);

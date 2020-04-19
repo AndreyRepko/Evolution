@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using Accessibility;
 using Evolution.Game.Model;
+using Evolution.Game.Model.Positions;
 
 namespace Evolution.Game
 {
@@ -65,10 +66,10 @@ namespace Evolution.Game
 
         private Position GetNotOccupiedRandomPosition()
         {
-            var pos = Position.GetRandomPosition(MaxX, MaxY);
+            var pos = PositionExtensions.GetRandomPosition(MaxX, MaxY);
             while (IsOccupied(pos))
             {
-                pos = Position.GetRandomPosition(MaxX, MaxY);
+                pos = PositionExtensions.GetRandomPosition(MaxX, MaxY);
             }
 
             return pos;
@@ -78,7 +79,7 @@ namespace Evolution.Game
         {
             foreach (var being in Population)
             {
-                if (Equals(position, being.Position))
+                if (Equals((object)position, (object)being.Position))
                     return true;
             }
 
@@ -99,8 +100,6 @@ namespace Evolution.Game
                 if ((being as Zavr).State)
                 {
                     (being as Zavr).NextTurn(true, _worldInformation);
-                    NotifyPropertyChanged();
-                    NotifyPropertyChanged(nameof(Population));
                 }
             }
 

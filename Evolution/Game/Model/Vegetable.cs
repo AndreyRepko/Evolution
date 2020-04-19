@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
+using Evolution.Game.Model.Positions;
 
 namespace Evolution.Game.Model
 {

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Windows.Documents;
+using Evolution.Game.Model.Positions;
 
 namespace Evolution.Game.Model
 {
@@ -218,8 +219,6 @@ namespace Evolution.Game.Model
                 world.SpawnNewZavr(Position, newSpeed, newSight, (Directions)RandomNumberGenerator.GetInt32(1, 9));
                 Energy -= _maxEnergy/2;
             }
-
-            NotifyPropertyChanged();
         }
 
         private int GetNewSight(int sight)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Evolution.Game.Model.Positions;
 
 namespace Evolution.Game.Model
 {
@@ -21,7 +22,6 @@ namespace Evolution.Game.Model
         /// <param name="direction">Direction of view of zavr</param>
         /// <returns></returns>
         SeenItems WhatZavrCanSee(Position zavrPosition, int sight, Directions direction);
-
         void CorrectPositionToAllowed(ref Position newPosition);
         bool CanEat(Position position);
         (Position position, int nutriotion) EatVegetable(Position position);

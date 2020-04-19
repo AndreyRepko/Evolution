@@ -1,11 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 
-namespace Evolution.Game.Model
+namespace Evolution.Game.Model.Positions
 {
     [DebuggerDisplay("Position = {X}, {Y}")]
     public class Position : INotifyPropertyChanged
@@ -45,25 +43,6 @@ namespace Evolution.Game.Model
             _y = y;
         }
 
-        public static Position GetRandomPosition(int maxX, int maxY)
-        {
-            return new Position(RandomNumberGenerator.GetInt32(0, maxX), RandomNumberGenerator.GetInt32(0, maxY));
-        }
-
-        public static Directions GetRelativePosition(Position p, in int x, in int y)
-        {
-            if (p.X == x && p.Y > y) return Directions.Up;
-            if (p.X < x && p.Y < y) return Directions.UpRight;
-            if (p.X < x && p.Y == y) return Directions.Right;
-            if (p.X < x && p.Y > y) return Directions.DownRight;
-            if (p.X == x && p.Y < y) return Directions.Down;
-            if (p.X > x && p.Y < y) return Directions.DownLeft;
-            if (p.X > x && p.Y == y) return Directions.Left;
-            if (p.X > x && p.Y > y) return Directions.UpLeft;
-            if (p.X == x && p.Y == y) return Directions.TheSame;
-            throw new InvalidDataException($"Direction could not be determined ({p.X}, {p.Y}) and ({x}, {y})");
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
@@ -97,13 +76,5 @@ namespace Evolution.Game.Model
             return HashCode.Combine(_x, _y);
         }
 
-    }
-
-    /// <summary>
-    /// Position of the object
-    /// </summary>
-    public interface IHavePosition
-    {
-        Position Position { get; }
     }
 }

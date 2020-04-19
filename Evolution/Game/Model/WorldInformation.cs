@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using Evolution.Game.Model.Positions;
 
 namespace Evolution.Game.Model
 {
@@ -21,16 +22,10 @@ namespace Evolution.Game.Model
             _world = world;
         }
 
-        private IEnumerable<IBeing> GetWorldAround(Position position, int sight)
+        private List<IBeing> GetWorldAround(Position position, int sight)
         {
-            for (var x = Math.Max(0, position.X - sight); x <= Math.Min(_world.MaxX, position.X + sight); x++)
-            for (var y = Math.Max(0, position.Y - sight); y <= Math.Min(_world.MaxY, position.Y + sight); y++)
-            {
-                var item = _world.Population.FirstOrDefault(b => b.Position.X == x && b.Position.Y == y);
-
-                if (item != null)
-                    yield return item;
-            }
+            var items = _world.Population.Where(b => position.IsPositionInSight(b.Position, sight)).ToList();
+            return items;
         }
 
         public SeenItems WhatZavrCanSee(Position zavrPosition, int sight, Directions direction)
@@ -40,7 +35,7 @@ namespace Evolution.Game.Model
             //ToDo : add limitaiton of see
 
             foreach(var item in items)
-                        result.Add((Position.GetRelativePosition(zavrPosition, item.Position.X, item.Position.Y), item.Nutrition, item));
+                        result.Add((zavrPosition.GetRelativePosition(item.Position), item.Nutrition, item));
 
             return result;
         }
