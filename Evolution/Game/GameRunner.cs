@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using Accessibility;
+using System.Threading;
 using Evolution.Game.Model;
+using Evolution.Game.Model.Items;
 using Evolution.Game.Model.Positions;
+using Evolution.Game.Model.WorldInteraction;
 
 namespace Evolution.Game
 {
@@ -20,7 +22,15 @@ namespace Evolution.Game
         public int MaxX { get; }
         public int MaxY { get; }
         public int EnergyBoxNutrition { get; set; }
-        public ObservableCollection<IBeing> Population { get; } = new ObservableCollection<IBeing>();
+        public ObservableCollection<IBeing> Population2 { get; private set; } = new ObservableCollection<IBeing>();
+
+        private List<Zavr> _zavrs = new List<Zavr>();
+        private List<EnergyBox> _energyBoxes = new List<EnergyBox>();
+        private List<Vegetable> _vegetables = new List<Vegetable>();
+
+        private IBeing[][] _beings;
+        private Dictionary<IBeing, Position> _beingPositions = new Dictionary<IBeing, Position>();
+
         public int Day
         {
             get { return _day; }
@@ -38,30 +48,91 @@ namespace Evolution.Game
         {
             MaxX = maxX;
             MaxY = maxY;
+            _beings = new IBeing[MaxX][];
+            for (var i = 0; i < MaxX; i++)
+            {
+                _beings[i] = new IBeing[MaxY];
+            }
+
             EnergyBoxNutrition = energyBoxNutrition;
+            _worldInformation = new WorldInformation(this);
+
             for (var i = 0; i < zavrs; i++)
             {
-                var pos = GetNotOccupiedRandomPosition();
-                Population.Add(Zavr.GetRandomZavr(pos));
+                AddZavrAtRandomPosition(Zavr.GetRandomZavr(_worldInformation));
             }
 
             for (var i = 0; i < vegetables; i++)
             {
-                var pos = GetNotOccupiedRandomPosition();
-                Population.Add(new Vegetable(pos));
+                AddVegetableAtRandomPosition();
             }
 
             for (var i = 0; i < energyBox; i++)
             {
-                var pos = GetNotOccupiedRandomPosition();
-                Population.Add(new EnergyBox(pos, EnergyBoxNutrition));
+                AddEnergyBoxAtRandomPosition();
             }
 
-            _worldInformation = new WorldInformation(this);
+            Day = 1;
 
-            Day = 0;
+            Repopulate();
+        }
 
-            NotifyPropertyChanged(nameof(Population));
+        private void Repopulate()
+        {
+            Population2 = new ObservableCollection<IBeing>();
+            foreach (var zavr in _zavrs)
+            {
+                Population2.Add(zavr);
+            }
+
+            foreach (var vegetable in _vegetables)
+            {
+                Population2.Add(vegetable);
+            }
+
+            foreach (var energyBox in _energyBoxes)
+            {
+                Population2.Add(energyBox);
+            }
+        }
+
+        private void AddEnergyBoxAtRandomPosition()
+        {
+            var pos = GetNotOccupiedRandomPosition();
+            AddEnergyBox(pos, new EnergyBox(pos, EnergyBoxNutrition));
+        }
+
+        private void AddEnergyBox(Position pos, EnergyBox energyBox)
+        {
+            _energyBoxes.Add(energyBox);
+            _beings[pos.X][pos.Y] = energyBox;
+            _beingPositions[energyBox] = pos;
+        }
+
+        private void AddVegetableAtRandomPosition()
+        {
+            var pos = GetNotOccupiedRandomPosition();
+            AddVegetable(pos, new Vegetable(_worldInformation));
+        }
+
+        private void AddVegetable(Position pos, Vegetable vegetable)
+        {
+            _vegetables.Add(vegetable);
+            _beings[pos.X][pos.Y] = vegetable;
+            _beingPositions[vegetable] = pos;
+        }
+
+        private void AddZavrAtRandomPosition(Zavr zavr)
+        {
+            var pos = GetNotOccupiedRandomPosition();
+            AddZavr(pos, zavr);
+        }
+
+        private void AddZavr(Position pos, Zavr zavr)
+        {
+            _zavrs.Add(zavr);
+            _beings[pos.X][pos.Y] = zavr;
+            _beingPositions[zavr] = pos;
         }
 
         private Position GetNotOccupiedRandomPosition()
@@ -77,13 +148,7 @@ namespace Evolution.Game
 
         private bool IsOccupied(Position position)
         {
-            foreach (var being in Population)
-            {
-                if (Equals((object)position, (object)being.Position))
-                    return true;
-            }
-
-            return false;
+            return _beings[position.X][position.Y] != null;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -93,22 +158,78 @@ namespace Evolution.Game
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void NextTurn()
+        public void NextTurn(int count)
         {
-            foreach (var being in Population.Where(x => x is Zavr).ToList())
+            for (int i = 0; i < count; i++)
             {
-                if ((being as Zavr).State)
+                DoNextTurn();
+            }
+
+            SanityCheck();
+
+            Repopulate();
+        }
+
+        private void SanityCheck()
+        {
+            foreach (var zavr in _zavrs)
+            {
+                var pos = _beingPositions[zavr];
+                if (_beings[pos.X][pos.Y] != zavr)
+                    throw new AbandonedMutexException("zavr :(");
+            }
+
+            foreach (var veg in _vegetables)
+            {
+                var pos = _beingPositions[veg];
+                if (_beings[pos.X][pos.Y] != veg)
+                    throw new AbandonedMutexException("veg :(");
+            }
+
+            foreach (var energyBox in _energyBoxes)
+            {
+                var pos = _beingPositions[energyBox];
+                if (_beings[pos.X][pos.Y] != energyBox)
+                    throw new AbandonedMutexException("energyBox :(");
+            }
+
+            for (int x =0 ; x < MaxX;x++)
+            for (int y = 0; y < MaxY; y++)
+            {
+                if (_beings[x][y] != null)
+                    if (_beings[x][y] is Zavr zavr)
+                        if (!zavr.State)
+                            throw new AbandonedMutexException("dead zavr found");
+            }
+
+            for (int x = 0; x < MaxX; x++)
+            for (int y = 0; y < MaxY; y++)
+            {
+                if (_beings[x][y] != null)
                 {
-                    (being as Zavr).NextTurn(true, _worldInformation);
+                    for (int x1 = 0; x1 < MaxX; x1++)
+                    for (int y1 = 0; y1 < MaxY; y1++)
+                    {
+                        if (_beings[x][y] == _beings[x1][y1] && (x != x1) && (y != y1))
+                            throw new AbandonedMutexException("cloning is forbidden");
+                    }
                 }
             }
+        }
 
-            foreach (var being in Population.Where(x => x is Vegetable).ToList())
+        private void DoNextTurn()
+        {
+            foreach (var zavr in _zavrs.Where(z => z.State).ToList())
             {
-                (being as Vegetable).NextTurn(true, _worldInformation);
+                zavr.NextTurn(true);
             }
 
-            if (Day %10 == 0)
+            foreach (var vegetable in _vegetables.ToList())
+            {
+                vegetable.NextTurn(true);
+            }
+
+            if (Day % 10 == 0)
             {
                 SpawnEnergyBoxes();
             }
@@ -120,23 +241,16 @@ namespace Evolution.Game
         {
             for (var i = 0; i < 50; i++)
             {
-                var pos = GetNotOccupiedRandomPosition();
-                Population.Add(new EnergyBox(pos, EnergyBoxNutrition));
+                AddEnergyBoxAtRandomPosition();
             }
         }
 
-        internal void Remove(Position position)
+        public void Remove(Zavr zavr)
         {
-            var item = Population.First(x => x.Position.Equals(position));
-            Population.Remove(item);
-        }
-
-        public void Remove(Vegetable food)
-        {
-            if (Population.Contains(food))
-                Population.Remove(food);
-            else
-                throw new ArgumentOutOfRangeException("Item not found, sorry");
+            var position = _beingPositions[zavr];
+            _beings[position.X][position.Y] = null;
+            _zavrs.Remove(zavr);
+            _beingPositions.Remove(zavr);
         }
 
         public void AddAggression(object aggressor, object victim)
@@ -156,7 +270,7 @@ namespace Evolution.Game
         {
             if (!IsOccupied(newPosition))
             {
-                Population.Add(new Zavr(newPosition, 1, true, 2500, speed, Directions.Up, sight));
+                AddZavr(newPosition, new Zavr(1, true, 2500, speed, Directions.Up, sight, _worldInformation));
             }
         }
 
@@ -164,7 +278,54 @@ namespace Evolution.Game
         {
             if (!IsOccupied(newPosition))
             {
-                Population.Add(new Vegetable(newPosition));
+                AddVegetable(newPosition, new Vegetable(_worldInformation));
+            }
+        }
+
+        public Position GetBeingPosition(IBeing being)
+        {
+            return _beingPositions[being];
+        }
+
+        public IEnumerable<(IBeing Being, Position Position)> GetPopulation(int minX, int maxX, int minY, int maxY)
+        {
+            for (var x = minX; x <= maxX; x++)
+            for (var y = minY; y <= maxY; y++)
+            {
+                var being = _beings[x][y];
+                if (being != null)
+                {
+                    yield return (being, _beingPositions[being]);
+                }
+            }
+        }
+
+        public void EatFoodByZavr(IBeing food, IBeing zavr)
+        {
+            var position = _beingPositions[food];
+            var zavrPosition = _beingPositions[zavr];
+            if (food is EnergyBox box)
+                _energyBoxes.Remove(box);
+            if (food is Vegetable veg)
+                _vegetables.Remove(veg);
+            _beings[position.X][position.Y] = zavr;
+            _beings[zavrPosition.X][zavrPosition.Y] = null;
+            _beingPositions.Remove(food);
+            _beingPositions[zavr] = position;
+        }
+
+        public void TryToMoveZavr(Zavr zavr, Position newPosition)
+        {
+            if (!IsOccupied(newPosition))
+            {
+                var oldPosition = _beingPositions[zavr];
+                _beings[oldPosition.X][oldPosition.Y] = null;
+                _beingPositions[zavr] = newPosition;
+                _beings[newPosition.X][newPosition.Y] = zavr;
+            }
+            else
+            {
+                //Debug.WriteLine("Occupied");
             }
         }
     }

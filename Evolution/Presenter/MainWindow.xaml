@@ -20,7 +20,7 @@
         </Grid.RowDefinitions>
 
         <Viewbox Grid.Row="0" Grid.Column="0">
-            <ItemsControl ItemsSource="{Binding Path=CurrentGame.Population}">
+            <ItemsControl ItemsSource="{Binding Path=CurrentGame.Population2}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <Canvas Width="{Binding BoardSize}" Height="{Binding BoardSize}" Background="{StaticResource Checkerboard}"/>
@@ -33,8 +33,8 @@
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemContainerStyle>
                     <Style>
-                        <Setter Property="Canvas.Left" Value="{Binding Position.X}" />
-                        <Setter Property="Canvas.Top" Value="{Binding Position.Y}" />
+                        <Setter Property="Canvas.Left" Value="{Binding WeakPosition.X}" />
+                        <Setter Property="Canvas.Top" Value="{Binding WeakPosition.Y}" />
                     </Style>
                 </ItemsControl.ItemContainerStyle>
             </ItemsControl>

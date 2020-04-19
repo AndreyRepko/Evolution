@@ -11,7 +11,7 @@ namespace Evolution.Presenter
         private const int _boardSize = 50;
         private const int _initialZavrsCount = 20;
         private const int _initialTreesCount = 0;
-        private const int _initialEnergyBoxCount = 100;
+        private const int _initialEnergyBoxCount = 50;
 
         public  EvolutionGameModel()
         {
@@ -94,21 +94,15 @@ namespace Evolution.Presenter
             if (DaysCount > 1000)
             {
                 var game = GetNewGame();
-                for (var i = 0; i < DaysCount; i++)
-                {
-                    game.NextTurn();
-                }
+                game.NextTurn(DaysCount);
 
                 CurrentGame = game;
                 NotifyPropertyChanged(nameof(CurrentGame));
             }
             else
             {
-                for (var i = 0; i < DaysCount; i++)
-                {
-                    CurrentGame.NextTurn();
-                    NotifyPropertyChanged(nameof(CurrentGame));
-                }
+                CurrentGame.NextTurn(DaysCount);
+                NotifyPropertyChanged(nameof(CurrentGame));
             }
 
             sw.Stop();

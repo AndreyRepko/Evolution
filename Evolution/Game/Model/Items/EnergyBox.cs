@@ -1,16 +1,14 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 using Evolution.Game.Model.Positions;
 
-
-namespace Evolution.Game.Model
+namespace Evolution.Game.Model.Items
 {
     public class EnergyBox : IFood, IBeing
     {
         private int _nutrition;
-        private readonly Position _position;
         private bool _underAggression;
+        private readonly Position _weakPosition;
 
         public int Nutrition
         {
@@ -29,7 +27,7 @@ namespace Evolution.Game.Model
 
         public EnergyBox(Position position, int initialNutrition)
         {
-            _position = position;
+            _weakPosition = position;
             _nutrition = initialNutrition;
         }
 
@@ -39,7 +37,7 @@ namespace Evolution.Game.Model
             NotifyPropertyChanged(nameof(IsUnderAggression));
         }
 
-        public Position Position => _position;
+        public Position WeakPosition => _weakPosition;
 
         public BeingType Type => BeingType.EnergyBox;
 

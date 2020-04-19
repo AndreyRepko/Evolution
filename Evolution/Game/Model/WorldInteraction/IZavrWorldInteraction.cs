@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Evolution.Game.Model.Items;
 using Evolution.Game.Model.Positions;
 
 namespace Evolution.Game.Model
@@ -21,12 +22,13 @@ namespace Evolution.Game.Model
         /// <param name="sight">The sight distance.</param>
         /// <param name="direction">Direction of view of zavr</param>
         /// <returns></returns>
-        SeenItems WhatZavrCanSee(Position zavrPosition, int sight, Directions direction);
-        void CorrectPositionToAllowed(ref Position newPosition);
-        bool CanEat(Position position);
-        (Position position, int nutriotion) EatVegetable(Position position);
+        SeenItems WhatZavrCanSee(IBeing zavr, int sight, Directions direction);
+        bool CanEat(IBeing zavr);
+        int EatVegetable(IBeing zavr);
         void MarkItemAsVictim(object victim, object aggressor);
-        void MarkZavrAsDead(Position position);
-        void SpawnNewZavr(Position position, int speed, int sight, Directions directions);
+        void MarkZavrAsDead(Zavr zavr);
+        void SpawnNewZavr(IBeing zavr, int speed, int sight, Directions directions);
+        Position GetPosition(IBeing being);
+        void MoveZavr(Zavr zavr, Directions itemDirection, in int chosenSpeed);
     }
 }

@@ -4,15 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
-using System.Windows.Documents;
 using Evolution.Game.Model.Positions;
 
-namespace Evolution.Game.Model
+namespace Evolution.Game.Model.Items
 {
     public class Zavr : IBeing
     {
         private int _sight;
-        private Position _position;
+        private readonly IZavrWorldInteraction _world;
         private int _age;
         private int _energy;
         private bool _state;
@@ -21,9 +20,9 @@ namespace Evolution.Game.Model
         private int _maxAge;
         private int _maxEnergy;
 
-        public Zavr(Position position)
+        public Zavr(IZavrWorldInteraction world)
         {
-            _position = position;
+            _world = world;
             _age = 1;
             _state = true;
             _maxAge = 100;
@@ -31,7 +30,8 @@ namespace Evolution.Game.Model
             _energy = 3000;
         }
 
-        public Zavr(Position position, int age, bool state, int energy, int speed, Directions direction, int sight) : this(position)
+        public Zavr(int age, bool state, int energy, int speed, Directions direction, int sight, 
+            IZavrWorldInteraction world) : this(world)
         {
             _age = age;
             _state = state;
@@ -114,43 +114,26 @@ namespace Evolution.Game.Model
             get => _direction;
         }
 
-        /// <summary>
-        /// Position of the Zavr
-        /// </summary>
-        public Position Position
+        public Position WeakPosition
         {
-            get => _position;
-            set
+            get
             {
-                if (!_position.Equals(value))
-                {
-                    _position = value;
-                    NotifyPropertyChanged(nameof(Position));
-                }
-
+                return _world.GetPosition(this);
             }
         }
 
         public BeingType Type => BeingType.Zavr;
 
-        public void ChangePosition(int x, int y)
+        public static Zavr GetRandomZavr(IZavrWorldInteraction world)
         {
-            //ToDo: implement check on speed, if we can move to the new position form the Zavr limitations
-            // point of view
-            _position.X = x;
-            _position.Y = y;
-        }
-
-        public static Zavr GetRandomZavr(Position position)
-        {
-            var zavr = new Zavr(position);
+            var zavr = new Zavr(world);
             zavr._sight = RandomNumberGenerator.GetInt32(1, 10);
             zavr._speed = RandomNumberGenerator.GetInt32(1, 5);
             return zavr;
         }
 
 
-        public void NextTurn(bool isNormalTurn, IZavrWorldInteraction world)
+        public void NextTurn(bool isNormalTurn)
         {
             //Okay let's do something :)
             //Here come the algorithm (v 1.0)
@@ -159,28 +142,28 @@ namespace Evolution.Game.Model
             //go into the direction of the food
 
             //Stage 1 : Look around
-            var items = world.WhatZavrCanSee(Position, _sight, _direction);
+            var items = _world.WhatZavrCanSee(this, _sight, _direction);
 
             if (items.Any())
             {
-                if (world.CanEat(Position))
+                if (_world.CanEat(this))
                 {
-                    EatFood(world);
+                    EatFood();
                 }
                 else
                 {
                     //Stage 2 : Choose the most valuable tree and go into the direction
                     var item = items.OrderByDescending(x => x.nutrition).First();
 
-                    world.MarkItemAsVictim(item.item, this);
+                    _world.MarkItemAsVictim(item.item, this);
 
                     var chosenSpeed = RandomNumberGenerator.GetInt32(1, _speed + 1);
 
-                    MakeMove(world, chosenSpeed, item.where); // это походить
+                    MakeMove(chosenSpeed, item.where); // это походить
                     //If we jump to the food would be fair to eat it ;)
-                    if (world.CanEat(Position))
+                    if (_world.CanEat(this))
                     {
-                        EatFood(world);
+                        EatFood();
                     }
                 }
             }
@@ -199,25 +182,25 @@ namespace Evolution.Game.Model
                 {
                     var chosenSpeed = RandomNumberGenerator.GetInt32(1, _speed + 1);
 
-                    MakeMove(world, chosenSpeed, (Directions)RandomNumberGenerator.GetInt32(1, 9));
+                    MakeMove(chosenSpeed, (Directions)RandomNumberGenerator.GetInt32(1, 9));
                 }
             }
 
             if (ZavrSurvied())
             {
                 Age++;
+
+                if (Energy >= _maxEnergy)
+                {
+                    var newSpeed = GetNewSpeed(_speed);
+                    var newSight = GetNewSight(_sight);
+                    _world.SpawnNewZavr(this, newSpeed, newSight, (Directions)RandomNumberGenerator.GetInt32(1, 9));
+                    Energy -= _maxEnergy / 2;
+                }
             }
             else
             {
-                KillZavr(world);
-            }
-
-            if (Energy >= _maxEnergy)
-            {
-                var newSpeed = GetNewSpeed(_speed);
-                var newSight = GetNewSight(_sight);
-                world.SpawnNewZavr(Position, newSpeed, newSight, (Directions)RandomNumberGenerator.GetInt32(1, 9));
-                Energy -= _maxEnergy/2;
+                KillZavr();
             }
         }
 
@@ -241,10 +224,10 @@ namespace Evolution.Game.Model
             return newSpeed;
         }
 
-        private void KillZavr(IZavrWorldInteraction world)
+        private void KillZavr()
         {
             State = false;
-            world.MarkZavrAsDead(Position);
+            _world.MarkZavrAsDead(this);
         }
 
         private bool ZavrSurvied()
@@ -263,20 +246,16 @@ namespace Evolution.Game.Model
             }
         }
 
-        private void EatFood(IZavrWorldInteraction worldInformation)
+        private void EatFood()
         {
-            var food = worldInformation.EatVegetable(Position);
-            _position.X = food.position.X;
-            _position.Y = food.position.Y;
-            _energy += food.nutriotion * 5; //ToDo: well, how much should we add here?
+            var food = _world.EatVegetable(this);
+            _energy += food * 5; //ToDo: well, how much should we add here?
         }
 
-        private void MakeMove(IZavrWorldInteraction worldInformation, in int chosenSpeed, Directions itemDirection)
+        private void MakeMove(in int chosenSpeed, Directions itemDirection)
         {
-            var newPosition = Position.MoveInDirection(itemDirection, chosenSpeed);
-            worldInformation.CorrectPositionToAllowed(ref newPosition);
-            
-            Position = newPosition;
+
+            _world.MoveZavr(this, itemDirection, chosenSpeed);
             _energy -= CostOfMovement(chosenSpeed);
         }
 
