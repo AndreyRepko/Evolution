@@ -65,7 +65,10 @@
                 <Rectangle VerticalAlignment="Stretch" Fill="Blue" Width="1"/>
             </StatusBarItem>
             <StatusBarItem>
-                <TextBlock Text="Some stuff2" />
+                <TextBlock>
+                    <TextBlock Text="Time per turn : "/>
+                    <TextBlock Text="{Binding LastTurnTime}"/>
+                </TextBlock>
             </StatusBarItem>
         </StatusBar>
     </Grid>

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using Evolution.Game;
@@ -22,6 +23,7 @@ namespace Evolution.Presenter
         private RelayCommand _nextTurnCommand;
         private int _daysCount = 1;
         private int _energyBoxNutrition = 50;
+        private string _lastTurnTime;
 
         public int BoardSize => _boardSize;
 
@@ -60,6 +62,20 @@ namespace Evolution.Presenter
             set { _daysCount = value; }
 
         }
+
+        public string LastTurnTime
+        {
+            get { return _lastTurnTime; }
+            set
+            {
+                if (_lastTurnTime != value)
+                {
+                    _lastTurnTime = value;
+                    NotifyPropertyChanged(nameof(LastTurnTime));
+                }
+            }
+        }
+
         public int EnergyBoxNutrition
         {
             get { return _energyBoxNutrition; }
@@ -73,17 +89,41 @@ namespace Evolution.Presenter
 
         private void NextTurn()
         {
-            for (var i = 0; i < DaysCount; i++)
+            var sw = new Stopwatch();
+            sw.Start();
+            if (DaysCount > 1000)
             {
-                CurrentGame.NextTurn();
+                var game = GetNewGame();
+                for (var i = 0; i < DaysCount; i++)
+                {
+                    game.NextTurn();
+                }
+
+                CurrentGame = game;
                 NotifyPropertyChanged(nameof(CurrentGame));
             }
+            else
+            {
+                for (var i = 0; i < DaysCount; i++)
+                {
+                    CurrentGame.NextTurn();
+                    NotifyPropertyChanged(nameof(CurrentGame));
+                }
+            }
+
+            sw.Stop();
+            LastTurnTime = string.Format("{0:0.00}", sw.ElapsedMilliseconds / 1000.0);
         }
 
         private void StartNewGame()
         {
-            CurrentGame = new GameRunner(_initialZavrsCount, _initialTreesCount, _initialEnergyBoxCount, BoardSize, BoardSize, EnergyBoxNutrition);
+            CurrentGame = GetNewGame();
             NotifyPropertyChanged(nameof(CurrentGame));
+        }
+
+        private GameRunner GetNewGame()
+        {
+            return new GameRunner(_initialZavrsCount, _initialTreesCount, _initialEnergyBoxCount, BoardSize, BoardSize, EnergyBoxNutrition);
         }
 
         private void CloseWindow(Window window)
