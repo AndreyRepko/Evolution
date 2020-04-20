@@ -44,6 +44,45 @@ namespace Evolution.Game
             }
         }
 
+        public int ZavrsCount
+        {
+            get
+            {
+                return _zavrs.Count;
+            }
+        }
+
+        public int AverageAge
+        {
+            get
+            {
+                return (int)_zavrs.Average(x => x.Age);
+            }
+        }
+
+        public int AverageSpeed
+        {
+            get
+            {
+                return (int)_zavrs.Average(x => x.Speed);
+            }
+        }
+
+        public int AverageSight
+        {
+            get
+            {
+                return (int)_zavrs.Average(x => x.Sight);
+            }
+        }
+
+        public int AverageEnergy
+        {
+            get
+            {
+                return (int)_zavrs.Average(x => x.Energy);
+            }
+        }
         public GameRunner(int zavrs, int vegetables, int energyBox, int maxX, int maxY, int energyBoxNutrition)
         {
             MaxX = maxX;
@@ -137,6 +176,10 @@ namespace Evolution.Game
 
         private Position GetNotOccupiedRandomPosition()
         {
+            if (_beingPositions.Count == MaxX * MaxY)
+            {
+                throw new Exception("Field is full");
+            }
             var pos = PositionExtensions.GetRandomPosition(MaxX, MaxY);
             while (IsOccupied(pos))
             {
@@ -270,7 +313,7 @@ namespace Evolution.Game
         {
             if (!IsOccupied(newPosition))
             {
-                AddZavr(newPosition, new Zavr(1, true, 2500, speed, Directions.Up, sight, _worldInformation));
+                AddZavr(newPosition, new Zavr(1, true, 2500, speed, Directions.Up, 0, sight, _worldInformation));
             }
         }
 

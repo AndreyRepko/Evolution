@@ -62,6 +62,30 @@ namespace Evolution.Presenter
             set { _daysCount = value; }
 
         }
+        public int ZavrsCount
+        {
+            get { return CurrentGame?.ZavrsCount ?? -1; }
+        }
+
+        public int AverageAge
+        {
+            get { return CurrentGame?.AverageAge ?? -1; }
+        }
+
+        public int AverageSpeed
+        {
+            get { return CurrentGame?.AverageSpeed ?? -1; }
+        }
+
+        public int AverageSight
+        {
+            get { return CurrentGame?.AverageSight ?? -1; }
+        }
+
+        public int AverageEnergy
+        {
+            get { return CurrentGame?.AverageEnergy ?? -1; }
+        }
 
         public string LastTurnTime
         {
@@ -104,6 +128,12 @@ namespace Evolution.Presenter
                 CurrentGame.NextTurn(DaysCount);
                 NotifyPropertyChanged(nameof(CurrentGame));
             }
+
+            NotifyPropertyChanged(nameof(ZavrsCount));
+            NotifyPropertyChanged(nameof(AverageAge));
+            NotifyPropertyChanged(nameof(AverageEnergy));
+            NotifyPropertyChanged(nameof(AverageSpeed));
+            NotifyPropertyChanged(nameof(AverageSight));
 
             sw.Stop();
             LastTurnTime = string.Format("{0:0.00}", sw.ElapsedMilliseconds / 1000.0);

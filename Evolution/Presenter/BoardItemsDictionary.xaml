@@ -64,6 +64,10 @@
                                                 <TextBlock Padding="3">Direction</TextBlock>
                                                 <TextBlock Padding="3" Text="{Binding Direction}"/>
                                             </WrapPanel>
+                                            <WrapPanel>
+                                                <TextBlock Padding="3">MyChilds</TextBlock>
+                                                <TextBlock Padding="3" Text="{Binding MyChilds}"/>
+                                            </WrapPanel>
                                         </StackPanel>
                                     </Polygon.ToolTip>
                                    </Polygon>

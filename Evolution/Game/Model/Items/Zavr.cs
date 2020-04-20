@@ -19,6 +19,7 @@ namespace Evolution.Game.Model.Items
         private Directions _direction;
         private int _maxAge;
         private int _maxEnergy;
+        private int _myChilds;
 
         public Zavr(IZavrWorldInteraction world)
         {
@@ -28,9 +29,10 @@ namespace Evolution.Game.Model.Items
             _maxAge = 100;
             _maxEnergy = 5000;
             _energy = 3000;
+            _myChilds = 0;
         }
 
-        public Zavr(int age, bool state, int energy, int speed, Directions direction, int sight, 
+        public Zavr(int age, bool state, int energy, int speed, Directions direction, int myChilds, int sight, 
             IZavrWorldInteraction world) : this(world)
         {
             _age = age;
@@ -39,6 +41,7 @@ namespace Evolution.Game.Model.Items
             _direction = direction;
             _energy = energy;
             _sight = sight;
+            _myChilds = myChilds;
         }
 
         /// <summary>
@@ -68,6 +71,19 @@ namespace Evolution.Game.Model.Items
                 {
                     _age = value;
                     NotifyPropertyChanged(nameof(Age));
+                }
+            }
+        }
+
+        public int MyChilds
+        {
+            get => _myChilds;
+            private set
+            {
+                if (_myChilds != value)
+                {
+                    _myChilds = value;
+                    NotifyPropertyChanged(nameof(MyChilds));
                 }
             }
         }
@@ -196,6 +212,7 @@ namespace Evolution.Game.Model.Items
                     var newSight = GetNewSight(_sight);
                     _world.SpawnNewZavr(this, newSpeed, newSight, (Directions)RandomNumberGenerator.GetInt32(1, 9));
                     Energy -= _maxEnergy / 2;
+                    MyChilds++;
                 }
             }
             else
