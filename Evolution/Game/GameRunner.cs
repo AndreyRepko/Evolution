@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Threading;
 using Evolution.Game.Model;
 using Evolution.Game.Model.Items;
@@ -56,23 +57,30 @@ namespace Evolution.Game
         {
             get
             {
+                if (_zavrs.Count == 0)
+                    return 0;
                 return (int)_zavrs.Average(x => x.Age);
             }
         }
 
-        public int AverageSpeed
+        public double AverageSpeed
         {
             get
             {
-                return (int)_zavrs.Average(x => x.Speed);
+                if (_zavrs.Count == 0)
+                    return 0;
+                return 1.0 * _zavrs.Sum(x => x.Speed) / _zavrs.Count;
             }
         }
 
-        public int AverageSight
+        public double AverageSight
         {
             get
             {
-                return (int)_zavrs.Average(x => x.Sight);
+                if (_zavrs.Count == 0)
+                    return 0;
+
+                return 1.0*_zavrs.Sum(x => x.Sight)/_zavrs.Count;
             }
         }
 
@@ -80,6 +88,8 @@ namespace Evolution.Game
         {
             get
             {
+                if (_zavrs.Count == 0)
+                    return 0;
                 return (int)_zavrs.Average(x => x.Energy);
             }
         }
@@ -180,13 +190,33 @@ namespace Evolution.Game
             {
                 throw new Exception("Field is full");
             }
-            var pos = PositionExtensions.GetRandomPosition(MaxX, MaxY);
-            while (IsOccupied(pos))
-            {
-                pos = PositionExtensions.GetRandomPosition(MaxX, MaxY);
-            }
 
-            return pos;
+            if (_beingPositions.Count < (MaxX * MaxY) / 2) //If there is almost empty field then looking random will work well
+            {
+                var pos = PositionExtensions.GetRandomPosition(MaxX, MaxY);
+                while (IsOccupied(pos))
+                {
+                    pos = PositionExtensions.GetRandomPosition(MaxX, MaxY);
+                }
+
+                return pos;
+            }
+            else //if field is almost full - it does not make sense to try to find empty slot randomly...
+            {
+                var movement = RandomNumberGenerator.GetInt32(0, MaxX * MaxY - _beingPositions.Count);
+
+                for (var x = 0; x < MaxX; x++)
+                for (var y = 0; y < MaxY; y++)
+                {
+                    if (_beings[x][y] == null)
+                    {
+                        if (movement ==0)
+                            return new Position(x,y);
+                        movement--;
+                    }
+                }
+            }
+            throw new Exception("Can't find position");
         }
 
         private bool IsOccupied(Position position)
@@ -205,12 +235,23 @@ namespace Evolution.Game
         {
             for (int i = 0; i < count; i++)
             {
+                if (IsFieldIsAlmostFull())
+                    break;
                 DoNextTurn();
+                if (IsFieldIsAlmostFull())
+                    break;
             }
 
             SanityCheck();
 
             Repopulate();
+        }
+
+        private bool IsFieldIsAlmostFull()
+        {
+            if (_beingPositions.Count > MaxX * MaxY -50)
+                return true;
+            return false;
         }
 
         private void SanityCheck()

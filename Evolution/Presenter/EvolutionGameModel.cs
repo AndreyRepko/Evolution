@@ -9,7 +9,7 @@ namespace Evolution.Presenter
     public class EvolutionGameModel : INotifyPropertyChanged
     {
         private const int _boardSize = 50;
-        private const int _initialZavrsCount = 20;
+        private const int _initialZavrsCount = 40;
         private const int _initialTreesCount = 0;
         private const int _initialEnergyBoxCount = 50;
 
@@ -72,12 +72,12 @@ namespace Evolution.Presenter
             get { return CurrentGame?.AverageAge ?? -1; }
         }
 
-        public int AverageSpeed
+        public double AverageSpeed
         {
             get { return CurrentGame?.AverageSpeed ?? -1; }
         }
 
-        public int AverageSight
+        public double AverageSight
         {
             get { return CurrentGame?.AverageSight ?? -1; }
         }
