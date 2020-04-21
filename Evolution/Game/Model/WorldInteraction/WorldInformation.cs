@@ -80,14 +80,14 @@ namespace Evolution.Game.Model.WorldInteraction
             _world.Remove(zavr);
         }
 
-        public void SpawnNewZavr(IBeing zavr, int speed, int sight, Directions directions)
+        public void SpawnNewZavr(IBeing zavr, int speed, int sight, int newGeneration, Directions directions)
         {
             var position = _world.GetBeingPosition(zavr);
 
             var newPosition = position.MoveInDirection(directions, RandomNumberGenerator.GetInt32(1, 2));
             CorrectPositionToAllowed(ref newPosition);
 
-            _world.AddNewZavr(newPosition, speed, sight);
+            _world.AddNewZavr(newPosition, speed, sight, newGeneration);
         }
 
         public void SpawnNewVegetable(IBeing being, Directions directions)
@@ -113,5 +113,11 @@ namespace Evolution.Game.Model.WorldInteraction
 
             _world.TryToMoveZavr(zavr, newPosition);
         }
+        /*
+        public void SpawnNewZavr(IBeing zavr, int speed, int sight, int newGeneration, Directions directions)
+        {
+            throw new NotImplementedException();
+        }
+        */
     }
 }

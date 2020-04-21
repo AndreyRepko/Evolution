@@ -20,6 +20,7 @@ namespace Evolution.Game.Model.Items
         private int _maxAge;
         private int _maxEnergy;
         private int _myChilds;
+        private int _generation;
 
         public Zavr(IZavrWorldInteraction world)
         {
@@ -32,7 +33,7 @@ namespace Evolution.Game.Model.Items
             _myChilds = 0;
         }
 
-        public Zavr(int age, bool state, int energy, int speed, Directions direction, int myChilds, int sight, 
+        public Zavr(int age, bool state, int energy, int speed, Directions direction, int myChilds, int generation, int sight, 
             IZavrWorldInteraction world) : this(world)
         {
             _age = age;
@@ -42,6 +43,7 @@ namespace Evolution.Game.Model.Items
             _energy = energy;
             _sight = sight;
             _myChilds = myChilds;
+            _generation = generation;
         }
 
         /// <summary>
@@ -71,6 +73,19 @@ namespace Evolution.Game.Model.Items
                 {
                     _age = value;
                     NotifyPropertyChanged(nameof(Age));
+                }
+            }
+        }
+
+        public int Generation
+        {
+            get => _generation;
+            private set
+            {
+                if (_generation != value)
+                {
+                    _generation = value;
+                    NotifyPropertyChanged(nameof(Generation));
                 }
             }
         }
@@ -210,7 +225,8 @@ namespace Evolution.Game.Model.Items
                 {
                     var newSpeed = GetNewSpeed(_speed);
                     var newSight = GetNewSight(_sight);
-                    _world.SpawnNewZavr(this, newSpeed, newSight, (Directions)RandomNumberGenerator.GetInt32(1, 9));
+                    var newGeneration = GetNewGeneration(_generation);
+                    _world.SpawnNewZavr(this, newSpeed, newSight, newGeneration, (Directions)RandomNumberGenerator.GetInt32(1, 9));
                     Energy -= _maxEnergy / 2;
                     MyChilds++;
                 }
@@ -219,6 +235,14 @@ namespace Evolution.Game.Model.Items
             {
                 KillZavr();
             }
+        }
+
+        private int GetNewGeneration(int _generation)
+        {
+            var newGeneration = _generation++;
+
+            newGeneration++;
+            return newGeneration;
         }
 
         private int GetNewSight(int sight)

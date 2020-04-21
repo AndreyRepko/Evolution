@@ -93,6 +93,16 @@ namespace Evolution.Game
                 return (int)_zavrs.Average(x => x.Energy);
             }
         }
+
+        public int AverageGeneration
+        {
+            get
+            {
+                if (_zavrs.Count == 0)
+                    return 0;
+                return (int)_zavrs.Average(x => x.Generation);
+            }
+        }
         public GameRunner(int zavrs, int vegetables, int energyBox, int maxX, int maxY, int energyBoxNutrition)
         {
             MaxX = maxX;
@@ -350,11 +360,11 @@ namespace Evolution.Game
                 vegetable2.NotifyAboutAggressionChange(true);
         }
 
-        internal void AddNewZavr(Position newPosition, int speed, int sight)
+        internal void AddNewZavr(Position newPosition, int speed, int sight, int Generation)
         {
             if (!IsOccupied(newPosition))
             {
-                AddZavr(newPosition, new Zavr(1, true, 2500, speed, Directions.Up, 0, sight, _worldInformation));
+                AddZavr(newPosition, new Zavr(1, true, 2500, speed, Directions.Up, 0, Generation, sight, _worldInformation));
             }
         }
 

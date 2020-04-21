@@ -27,7 +27,7 @@ namespace Evolution.Game.Model
         int EatVegetable(IBeing zavr);
         void MarkItemAsVictim(object victim, object aggressor);
         void MarkZavrAsDead(Zavr zavr);
-        void SpawnNewZavr(IBeing zavr, int speed, int sight, Directions directions);
+        void SpawnNewZavr(IBeing zavr, int speed, int sight, int newGeneration, Directions directions);
         Position GetPosition(IBeing being);
         void MoveZavr(Zavr zavr, Directions itemDirection, in int chosenSpeed);
     }

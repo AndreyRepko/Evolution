@@ -41,6 +41,10 @@
                 <TextBlock Margin="5">Average Energy:</TextBlock>
                 <TextBox Margin ="2, 5, 5, 5" Width="50" Text = "{Binding AverageEnergy, Mode=OneWay}"/>
             </WrapPanel>
+            <WrapPanel>
+                <TextBlock Margin="5">Average Generation:</TextBlock>
+                <TextBox Margin ="2, 5, 5, 5" Width="50" Text = "{Binding AverageGeneration, Mode=OneWay}"/>
+            </WrapPanel>
         </StackPanel>
 
         <Viewbox Grid.Row="0" Grid.Column="1">
