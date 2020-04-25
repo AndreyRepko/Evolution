@@ -65,6 +65,17 @@ namespace Evolution.Game
             }
         }
 
+        public int AverageGeneration
+        {
+            get
+            {
+                if (_game.Zavrs.Count == 0)
+                    return 0;
+                return (int)_game.Zavrs.Average(x => x.MyChilds);
+            }
+        }
+
+
         public void Gather()
         {
             _averageSpeed[_game.Day] = AverageSpeed;

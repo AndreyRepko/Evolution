@@ -114,7 +114,7 @@
                               ShowGraphPoints="True"
                               ChartTitle="Zavrs statistic" YLabel="Speed / sight" 
                               XLabel="Days" YMax="10" YMin="0" DoubleToString="N0"
-                              XMin="1" XMax="24">
+                              XMin="1" XMax="2400">
 
             </chartControl:BasicChart>
         </TabItem>

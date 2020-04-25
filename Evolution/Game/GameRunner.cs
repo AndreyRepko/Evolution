@@ -309,11 +309,12 @@ namespace Evolution.Game
                 vegetable2.NotifyAboutAggressionChange(true);
         }
 
-        internal void AddNewZavr(Position newPosition, int speed, int sight)
+        internal void AddNewZavr(Position newPosition, int speed, int sight, int newGeneration)
         {
             if (!IsOccupied(newPosition))
             {
-                AddZavr(newPosition, new Zavr(1, true, 2500, speed, Directions.Up, 0, sight, _worldInformation));
+                AddZavr(newPosition, new Zavr(1, true, 2500, speed, Directions.Up, 
+                       newGeneration, 0, sight, _worldInformation));
             }
         }
 
