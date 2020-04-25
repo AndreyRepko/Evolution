@@ -1,8 +1,12 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using Evolution.Game;
+using Evolution.Presenter.ChartControl;
 
 namespace Evolution.Presenter
 {
@@ -15,6 +19,8 @@ namespace Evolution.Presenter
 
         public  EvolutionGameModel()
         {
+            StatisticSeries = new ObservableCollection<LineSeries>();
+
             StartNewGame();
         }
 
@@ -26,6 +32,8 @@ namespace Evolution.Presenter
         private string _lastTurnTime;
 
         public int BoardSize => _boardSize;
+
+        public ObservableCollection<LineSeries> StatisticSeries { get; }
 
         public GameRunner CurrentGame { get; set; }
 
@@ -62,29 +70,30 @@ namespace Evolution.Presenter
             set { _daysCount = value; }
 
         }
+
         public int ZavrsCount
         {
-            get { return CurrentGame?.ZavrsCount ?? -1; }
+            get { return CurrentGame?.Statistic.ZavrsCount ?? -1; }
         }
 
         public int AverageAge
         {
-            get { return CurrentGame?.AverageAge ?? -1; }
+            get { return CurrentGame?.Statistic.AverageAge ?? -1; }
         }
 
         public double AverageSpeed
         {
-            get { return CurrentGame?.AverageSpeed ?? -1; }
+            get { return CurrentGame?.Statistic.AverageSpeed ?? -1; }
         }
 
         public double AverageSight
         {
-            get { return CurrentGame?.AverageSight ?? -1; }
+            get { return CurrentGame?.Statistic.AverageSight ?? -1; }
         }
 
         public int AverageEnergy
         {
-            get { return CurrentGame?.AverageEnergy ?? -1; }
+            get { return CurrentGame?.Statistic.AverageEnergy ?? -1; }
         }
         
         public int AverageGeneration
@@ -134,6 +143,8 @@ namespace Evolution.Presenter
                 NotifyPropertyChanged(nameof(CurrentGame));
             }
 
+            ReloadStatistic();
+
             NotifyPropertyChanged(nameof(ZavrsCount));
             NotifyPropertyChanged(nameof(AverageAge));
             NotifyPropertyChanged(nameof(AverageEnergy));
@@ -142,6 +153,31 @@ namespace Evolution.Presenter
 
             sw.Stop();
             LastTurnTime = string.Format("{0:0.00}", sw.ElapsedMilliseconds / 1000.0);
+        }
+
+        private void ReloadStatistic()
+        {
+            StatisticSeries.Clear();
+
+            Func<int, bool> filter;
+            if (CurrentGame.Day > 100)
+            {
+                filter = (x) => x % 10 == 0;
+            }
+            else
+            {
+                filter = (_) => true;
+            }
+
+            var speedSeries = new LineSeries() {Name = "Average speed"};
+            foreach (var pair in CurrentGame.Statistic.AverageSpeedByDays.Where(x=>filter(x.Key)))
+            {
+                speedSeries.Data.Add(new DataPoint(pair.Key, pair.Value));
+            }
+
+            StatisticSeries.Add(speedSeries);
+
+            NotifyPropertyChanged(nameof(StatisticSeries));
         }
 
         private void StartNewGame()

@@ -32,6 +32,8 @@ namespace Evolution.Game
         private IBeing[][] _beings;
         private Dictionary<IBeing, Position> _beingPositions = new Dictionary<IBeing, Position>();
 
+        public IReadOnlyList<Zavr> Zavrs => _zavrs;
+
         public int Day
         {
             get { return _day; }
@@ -45,64 +47,6 @@ namespace Evolution.Game
             }
         }
 
-        public int ZavrsCount
-        {
-            get
-            {
-                return _zavrs.Count;
-            }
-        }
-
-        public int AverageAge
-        {
-            get
-            {
-                if (_zavrs.Count == 0)
-                    return 0;
-                return (int)_zavrs.Average(x => x.Age);
-            }
-        }
-
-        public double AverageSpeed
-        {
-            get
-            {
-                if (_zavrs.Count == 0)
-                    return 0;
-                return 1.0 * _zavrs.Sum(x => x.Speed) / _zavrs.Count;
-            }
-        }
-
-        public double AverageSight
-        {
-            get
-            {
-                if (_zavrs.Count == 0)
-                    return 0;
-
-                return 1.0*_zavrs.Sum(x => x.Sight)/_zavrs.Count;
-            }
-        }
-
-        public int AverageEnergy
-        {
-            get
-            {
-                if (_zavrs.Count == 0)
-                    return 0;
-                return (int)_zavrs.Average(x => x.Energy);
-            }
-        }
-
-        public int AverageGeneration
-        {
-            get
-            {
-                if (_zavrs.Count == 0)
-                    return 0;
-                return (int)_zavrs.Average(x => x.Generation);
-            }
-        }
         public GameRunner(int zavrs, int vegetables, int energyBox, int maxX, int maxY, int energyBoxNutrition)
         {
             MaxX = maxX;
@@ -134,7 +78,11 @@ namespace Evolution.Game
             Day = 1;
 
             Repopulate();
+
+            Statistic = new GameStatistic(this);
         }
+
+        public GameStatistic Statistic { get; set; }
 
         private void Repopulate()
         {
@@ -248,6 +196,7 @@ namespace Evolution.Game
                 if (IsFieldIsAlmostFull())
                     break;
                 DoNextTurn();
+                Statistic.Gather();
                 if (IsFieldIsAlmostFull())
                     break;
             }
@@ -360,11 +309,11 @@ namespace Evolution.Game
                 vegetable2.NotifyAboutAggressionChange(true);
         }
 
-        internal void AddNewZavr(Position newPosition, int speed, int sight, int Generation)
+        internal void AddNewZavr(Position newPosition, int speed, int sight)
         {
             if (!IsOccupied(newPosition))
             {
-                AddZavr(newPosition, new Zavr(1, true, 2500, speed, Directions.Up, 0, Generation, sight, _worldInformation));
+                AddZavr(newPosition, new Zavr(1, true, 2500, speed, Directions.Up, 0, sight, _worldInformation));
             }
         }
 
