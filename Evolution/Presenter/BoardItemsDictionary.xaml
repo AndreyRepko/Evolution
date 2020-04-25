@@ -68,6 +68,10 @@
                                                 <TextBlock Padding="3">MyChilds</TextBlock>
                                                 <TextBlock Padding="3" Text="{Binding MyChilds}"/>
                                             </WrapPanel>
+                                            <WrapPanel>
+                                                <TextBlock Padding="3">Generation</TextBlock>
+                                                <TextBlock Padding="3" Text="{Binding Generation}"/>
+                                            </WrapPanel>
                                         </StackPanel>
                                     </Polygon.ToolTip>
                                    </Polygon>

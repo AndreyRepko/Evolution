@@ -95,6 +95,11 @@ namespace Evolution.Presenter
         {
             get { return CurrentGame?.Statistic.AverageEnergy ?? -1; }
         }
+        
+        public int AverageGeneration
+        {
+            get { return CurrentGame?.AverageGeneration ?? -1; }
+        }
 
         public string LastTurnTime
         {
