@@ -7,8 +7,7 @@
              mc:Ignorable="d" 
              x:FieldModifier="private"
              x:Name="_this"
-             DataContext="{Binding RelativeSource={RelativeSource Self}}"
-             Height="350" Width="525" MinHeight="250" MinWidth="200" Background="White">
+             Background="White">
     <UserControl.Resources>
         <Style x:Key="{x:Type CheckBox}" TargetType="{x:Type CheckBox}">
             <Setter Property="SnapsToDevicePixels" Value="true"/>
@@ -71,7 +70,7 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    <Grid>
+    <Grid DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type chartControl:BasicChart}}}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="40"/>
             <ColumnDefinition Width="*"/>
@@ -85,7 +84,7 @@
 
         <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" 
                    FontSize="16" FontWeight="ExtraBold" TextAlignment="Center" 
-                   Text="{Binding RelativeSource={RelativeSource AncestorType={x:Type chartControl:BasicChart}}, Path=ChartTitle}"></TextBlock>
+                   Text="{Binding Path=ChartTitle}"></TextBlock>
         <TextBlock Text="{Binding Path=YLabel}"  Width="200" Grid.Column="0" Grid.Row="1"  
                    TextAlignment="center"  VerticalAlignment="Center" HorizontalAlignment="Center" >
             <TextBlock.LayoutTransform>
@@ -93,7 +92,7 @@
             </TextBlock.LayoutTransform>
         </TextBlock>
         <TextBlock  Grid.Column="1" Grid.Row="2" 
-                    Text="{Binding RelativeSource={RelativeSource AncestorType={x:Type chartControl:BasicChart}}, Path=XLabel}"  
+                    Text="{Binding Path=XLabel}"  
                     Width="100" Margin="10" TextAlignment="Center" />
 
         <Border x:FieldModifier="private" x:Name="PlotAreaBorder" 
@@ -115,7 +114,8 @@
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>
-                    <ItemsControl x:FieldModifier="private" x:Name="XAxis" Canvas.Bottom="0" Canvas.Left="40" Width="400" Height="40" ItemsSource="{Binding}">
+                    <ItemsControl x:FieldModifier="private" x:Name="XAxis" Canvas.Bottom="0" Canvas.Left="40" Width="400" Height="40" 
+                                  ItemsSource="{Binding}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <Canvas/>
@@ -127,7 +127,8 @@
                             </Style>
                         </ItemsControl.ItemContainerStyle>
                     </ItemsControl>
-                    <ItemsControl x:FieldModifier="private" x:Name="YAxis" Canvas.Bottom="40" Canvas.Left="0" Width="40" Height="170" ItemsSource="{Binding YItems}">
+                    <ItemsControl x:FieldModifier="private" x:Name="YAxis" Canvas.Bottom="40" Canvas.Left="0" Width="40" Height="170" 
+                                  ItemsSource="{Binding YItems}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <Canvas/>
