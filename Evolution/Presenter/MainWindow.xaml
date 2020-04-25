@@ -6,6 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Evolution"
         xmlns:presenter="clr-namespace:Evolution.Presenter"
+        xmlns:chartControl="clr-namespace:Evolution.Presenter.ChartControl"
         mc:Ignorable="d"
         Title="You say you wanna evolution, well, you know, we all want to change the world" Height="450" Width="800"
         d:DataContext="{d:DesignInstance Type=presenter:EvolutionGameModel}">
@@ -100,7 +101,20 @@
             </Grid>
         </TabItem>
         <TabItem Header ="Statistic">
-            <Canvas></Canvas>
+            <chartControl:BasicChart 
+                x:Name="MyChart"
+                              ItemsSource="{Binding StatisticSeries}"
+                              DataCollectionName="Data"   
+                              DisplayMemberLabels="Day"
+                              DisplayMemberValues="Value"
+                              SkipLabels="3"
+                              StartSkipAt="1"
+                              ShowGraphPoints="True"
+                              ChartTitle="Zavrs statistic" YLabel="Speed / sight" 
+                              XLabel="Days" YMax="10" YMin="0" DoubleToString="N0"
+                              XMin="1" XMax="24">
+
+            </chartControl:BasicChart>
         </TabItem>
     </TabControl>
 </Window>
