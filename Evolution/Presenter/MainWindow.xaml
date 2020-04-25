@@ -103,6 +103,8 @@
         <TabItem Header ="Statistic">
             <chartControl:BasicChart 
                 x:Name="MyChart"
+                VerticalAlignment="Stretch"
+                HorizontalAlignment="Stretch"
                               ItemsSource="{Binding StatisticSeries}"
                               DataCollectionName="Data"   
                               DisplayMemberLabels="Day"
