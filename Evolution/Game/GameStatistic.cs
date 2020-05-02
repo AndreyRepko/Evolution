@@ -7,13 +7,19 @@ namespace Evolution.Game
     {
         private readonly GameRunner _game;
         private readonly Dictionary<int, double> _averageSpeed;
+        private readonly Dictionary<int, double> _averageSight;
+        private readonly Dictionary<int, double> _ZavrsCount;
 
         public IReadOnlyDictionary<int, double> AverageSpeedByDays => _averageSpeed;
+        public IReadOnlyDictionary<int, double> AverageSightByDays => _averageSight;
+        public IReadOnlyDictionary<int, double> ZavrCountByDays => _ZavrsCount;
 
         public GameStatistic(GameRunner game)
         {
             _game = game;
             _averageSpeed = new Dictionary<int, double>();
+            _averageSight = new Dictionary<int, double>();
+            _ZavrsCount = new Dictionary<int, double>();
         }
 
         public int ZavrsCount
@@ -79,6 +85,8 @@ namespace Evolution.Game
         public void Gather()
         {
             _averageSpeed[_game.Day] = AverageSpeed;
+            _averageSight[_game.Day] = AverageSight;
+            _ZavrsCount[_game.Day] = ZavrsCount;
         }
     }
 }

@@ -115,7 +115,7 @@
                 ChartTitle="Zavrs statistic" 
                 YLabel="Speed / sight" 
                 XLabel="Days" YMax="10" YMin="0" DoubleToString="0.00"
-                XMin="1" XMax="2400">
+                XMin="1" XMax="{Binding DaysCount}">
             </chartControl:BasicChart>
         </TabItem> 
         <TabItem Header ="Setup">

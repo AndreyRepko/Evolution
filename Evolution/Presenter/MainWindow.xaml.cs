@@ -11,7 +11,6 @@ namespace Evolution.Presenter
         {
             InitializeComponent();
             DataContext = new EvolutionGameModel();
-            MyChart.ItemsSource = ((EvolutionGameModel) DataContext).StatisticSeries;
         }
     }
 }

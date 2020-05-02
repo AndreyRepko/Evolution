@@ -172,7 +172,21 @@ namespace Evolution.Presenter
                 speedSeries.Data.Add(new DataPoint(pair.Key, pair.Value));
             }
 
+            var sightSeries = new LineSeries() { Name = "Average sight" };
+            foreach (var pair in CurrentGame.Statistic.AverageSightByDays.Where(x => filter(x.Key)))
+            {
+                sightSeries.Data.Add(new DataPoint(pair.Key, pair.Value));
+            }
+
+            var ZavrCountSeries = new LineSeries() { Name = "Zavr Count" };
+            foreach (var pair in CurrentGame.Statistic.ZavrCountByDays.Where(x => filter(x.Key)))
+            {
+                ZavrCountSeries.Data.Add(new DataPoint(pair.Key, pair.Value));
+            }
+
             StatisticSeries.Add(speedSeries);
+            StatisticSeries.Add(sightSeries);
+            StatisticSeries.Add(ZavrCountSeries);
 
             NotifyPropertyChanged(nameof(StatisticSeries));
         }
