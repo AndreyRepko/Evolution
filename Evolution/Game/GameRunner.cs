@@ -197,7 +197,7 @@ namespace Evolution.Game
                     break;
                 DoNextTurn();
                 Statistic.Gather();
-                if (IsFieldIsAlmostFull())
+                if (IsFieldIsAlmostFull() || !Zavrs.Any())
                     break;
             }
 

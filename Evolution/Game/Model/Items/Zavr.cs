@@ -166,14 +166,7 @@ namespace Evolution.Game.Model.Items
 
         public void NextTurn(bool isNormalTurn)
         {
-            //Okay let's do something :)
-            //Here come the algorithm (v 1.0)
-            //Check for the food - is no then turn
-            //If yes - try to it, if fail
-            //go into the direction of the food
-
-            //Stage 1 : Look around
-            var items = _world.WhatZavrCanSee(this, _sight, _direction);
+            SeenItems items = GetAroundItems();
 
             if (items.Any())
             {
@@ -207,7 +200,7 @@ namespace Evolution.Game.Model.Items
                     if (temp > Directions.UpLeft) //Cruel hack, but should work
                         temp = Directions.Up;
                     _direction = temp;
-                    Energy -= 5;
+                    _energy -= 5;
                 }
                 else
                 {
@@ -235,6 +228,19 @@ namespace Evolution.Game.Model.Items
             {
                 KillZavr();
             }
+        }
+
+        private SeenItems GetAroundItems()
+        {
+            var items = _world.WhatZavrCanSee(this, _sight, _direction);
+            _energy -= CostOfSight(_sight);
+            return items;
+        }
+
+        private int CostOfSight(int sight)
+        {
+            var energy = (int)Math.Pow(sight, 2);
+            return energy;
         }
 
         private int GetNewGeneration(int _generation)

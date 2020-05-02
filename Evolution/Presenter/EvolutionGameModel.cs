@@ -124,6 +124,11 @@ namespace Evolution.Presenter
             }
 
         }
+        public bool IsLimitedStatistic
+        {
+            get;
+            set;
+        }
 
         private void NextTurn()
         {
@@ -158,19 +163,28 @@ namespace Evolution.Presenter
         private void ReloadStatistic()
         {
             StatisticSeries.Clear();
-
+            int startFromDay;
+            if (IsLimitedStatistic)
+            {
+                startFromDay = CurrentGame.Day - 500;
+            }
+            else
+            {
+                startFromDay = 1;
+            }
             Func<int, bool> filter;
             if (CurrentGame.Day > 100)
             {
-                filter = (x) => x % 10 == 0;
+                filter = (x) => x % 10 == 0 && x > startFromDay;
             }
             else
             {
                 filter = (_) => true;
             }
 
-            var speedSeries = new LineSeries() {Name = "Average speed"};
-            foreach (var pair in CurrentGame.Statistic.AverageSpeedByDays.Where(x=>filter(x.Key)))
+
+            var speedSeries = new LineSeries() { Name = "Average speed" };
+            foreach (var pair in CurrentGame.Statistic.AverageSpeedByDays.Where(x => filter(x.Key)))
             {
                 speedSeries.Data.Add(new DataPoint(pair.Key, pair.Value));
             }
