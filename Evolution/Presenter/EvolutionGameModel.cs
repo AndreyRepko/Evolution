@@ -12,14 +12,10 @@ namespace Evolution.Presenter
 {
     public class EvolutionGameModel : INotifyPropertyChanged
     {
-        private const int _boardSize = 50;
-        private const int _initialZavrsCount = 40;
-        private const int _initialTreesCount = 0;
-        private const int _initialEnergyBoxCount = 50;
-
         public  EvolutionGameModel()
         {
             StatisticSeries = new ObservableCollection<LineSeries>();
+            Setup = new GameSetup();
 
             StartNewGame();
         }
@@ -28,10 +24,11 @@ namespace Evolution.Presenter
         private RelayCommand<Window> _closeWindowCommand;
         private RelayCommand _nextTurnCommand;
         private int _daysCount = 1;
-        private int _energyBoxNutrition = 50;
         private string _lastTurnTime;
 
-        public int BoardSize => _boardSize;
+        public GameSetup Setup { get; set; }
+
+        public int BoardSize => Setup.BoardSize;
 
         public ObservableCollection<LineSeries> StatisticSeries { get; }
 
@@ -116,11 +113,11 @@ namespace Evolution.Presenter
 
         public int EnergyBoxNutrition
         {
-            get { return _energyBoxNutrition; }
+            get { return Setup.EnergyBoxNutrition; }
             set 
             {
-                _energyBoxNutrition = value;
-                CurrentGame.EnergyBoxNutrition = _energyBoxNutrition;
+                Setup.EnergyBoxNutrition = value;
+                CurrentGame.EnergyBoxNutrition = Setup.EnergyBoxNutrition;
             }
 
         }
@@ -183,12 +180,15 @@ namespace Evolution.Presenter
         private void StartNewGame()
         {
             CurrentGame = GetNewGame();
+            NotifyPropertyChanged(nameof(BoardSize));
             NotifyPropertyChanged(nameof(CurrentGame));
         }
 
         private GameRunner GetNewGame()
         {
-            return new GameRunner(_initialZavrsCount, _initialTreesCount, _initialEnergyBoxCount, BoardSize, BoardSize, EnergyBoxNutrition);
+            return new GameRunner(Setup.InitialZavrsCount, Setup.InitialTreesCount, 
+                Setup.InitialEnergyBoxCount, BoardSize, BoardSize, 
+                Setup.EnergyBoxNutrition);
         }
 
         private void CloseWindow(Window window)

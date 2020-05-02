@@ -105,18 +105,48 @@
                 x:Name="MyChart"
                 VerticalAlignment="Stretch"
                 HorizontalAlignment="Stretch"
-                              ItemsSource="{Binding StatisticSeries}"
-                              DataCollectionName="Data"   
-                              DisplayMemberLabels="Day"
-                              DisplayMemberValues="Value"
-                              SkipLabels="3"
-                              StartSkipAt="1"
-                              ShowGraphPoints="True"
-                              ChartTitle="Zavrs statistic" 
+                ItemsSource="{Binding StatisticSeries}"
+                DataCollectionName="Data"   
+                DisplayMemberLabels="Day"
+                DisplayMemberValues="Value"
+                SkipLabels="3"
+                StartSkipAt="1"
+                ShowGraphPoints="True"
+                ChartTitle="Zavrs statistic" 
                 YLabel="Speed / sight" 
-                              XLabel="Days" YMax="10" YMin="0" DoubleToString="0.00"
-                              XMin="1" XMax="2400">
+                XLabel="Days" YMax="10" YMin="0" DoubleToString="0.00"
+                XMin="1" XMax="2400">
             </chartControl:BasicChart>
+        </TabItem> 
+        <TabItem Header ="Setup">
+            <Grid VerticalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="40" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.Row="0" Margin="5">Board size</TextBlock>
+                <TextBox Grid.Column="1" Grid.Row="0" Margin="5" Text="{Binding Setup.BoardSize}"/>
+                
+                <TextBlock Grid.Column="0" Grid.Row="1" Margin="5">Initial Zavrs count</TextBlock>
+                <TextBox Grid.Column="1" Grid.Row="1" Margin="5" Text="{Binding Setup.InitialZavrsCount}"/>
+                
+                <TextBlock Grid.Column="0" Grid.Row="2" Margin="5">Initial Trees count</TextBlock>
+                <TextBox Grid.Column="1" Grid.Row="2" Margin="5" Text="{Binding Setup.InitialTreesCount}"/>
+                
+                <TextBlock Grid.Column="0" Grid.Row="3" Margin="5">Initial Energy Boxes count</TextBlock>
+                <TextBox Grid.Column="1" Grid.Row="3" Margin="5" Text="{Binding Setup.InitialEnergyBoxCount}"/>
+                
+                <TextBlock Grid.Column="0" Grid.Row="4" Margin="5">Energy box nutrition</TextBlock>
+                <TextBox Grid.Column="1" Grid.Row="4" Margin="5" Text="{Binding Setup.EnergyBoxNutrition}"/>
+            </Grid>
         </TabItem>
     </TabControl>
 </Window>
