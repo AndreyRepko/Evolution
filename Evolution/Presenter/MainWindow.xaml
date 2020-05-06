@@ -135,6 +135,9 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Column="0" Grid.Row="0" Margin="5">Board size</TextBlock>
                 <TextBox Grid.Column="1" Grid.Row="0" Margin="5" Text="{Binding BoardSetup.BoardSize}"/>
@@ -153,6 +156,12 @@
                 
                 <TextBlock Grid.Column="0" Grid.Row="5" Margin="5">Max Age</TextBlock>
                 <TextBox Grid.Column="1" Grid.Row="5" Margin="5" Text="{Binding Setup.InitialMaxAge}"/>
+
+                <TextBlock Grid.Column="0" Grid.Row="6" Margin="5">Max Energe</TextBlock>
+                <TextBox Grid.Column="1" Grid.Row="6" Margin="5" Text="{Binding Setup.InitialMaxEnergy}"/>
+
+                <TextBlock Grid.Column="0" Grid.Row="7" Margin="5">Start Energy</TextBlock>
+                <TextBox Grid.Column="1" Grid.Row="7" Margin="5" Text="{Binding Setup.InitialStartEnergy}"/>
             </Grid>
         </TabItem>
     </TabControl>

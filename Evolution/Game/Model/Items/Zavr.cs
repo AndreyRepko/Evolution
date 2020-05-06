@@ -21,7 +21,7 @@ namespace Evolution.Game.Model.Items
         private int _maxEnergy;
         private int _myChilds;
         private int _generation;
-
+        /*
         private int _initialMaxAge = 100;
         private int _initialMaxEnergy = 5000;
         private int _initialStartEnergy = 3000;
@@ -30,7 +30,7 @@ namespace Evolution.Game.Model.Items
         private int _initialEnergyToEat = 5;
         private int _initialPowerDirection = 1;
         private int _initialCostOfMovementTwo = 10;
-        private int _initialCostOfMovementOne = 2;
+        private int _initialCostOfMovementOne = 2; */
 
         public Zavr(IZavrWorldInteraction world, ZavrSetup setup)
         {
@@ -38,8 +38,9 @@ namespace Evolution.Game.Model.Items
             _age = 1;
             _state = true;
             _maxAge = setup.InitialMaxAge;
-            _maxEnergy = _initialMaxEnergy;
-            _energy = _initialStartEnergy;
+            _maxEnergy = setup.InitialMaxEnergy;
+            _energy = setup.InitialStartEnergy;
+
             _myChilds = 0;
         }
 
@@ -174,7 +175,7 @@ namespace Evolution.Game.Model.Items
         }
 
 
-        public void NextTurn(bool isNormalTurn)
+        public void NextTurn(bool isNormalTurn, ZavrSetup setup)
         {
             SeenItems items = GetAroundItems();
 
@@ -182,7 +183,7 @@ namespace Evolution.Game.Model.Items
             {
                 if (_world.CanEat(this))
                 {
-                    EatFood();
+                    EatFood(setup);
                 }
                 else
                 {
@@ -193,11 +194,11 @@ namespace Evolution.Game.Model.Items
 
                     var chosenSpeed = RandomNumberGenerator.GetInt32(1, _speed + 1);
 
-                    MakeMove(chosenSpeed, item.where); // это походить
+                    MakeMove(chosenSpeed, item.where, setup); // это походить
                     //If we jump to the food would be fair to eat it ;)
                     if (_world.CanEat(this))
                     {
-                        EatFood();
+                        EatFood(setup);
                     }
                 }
             }
@@ -206,17 +207,17 @@ namespace Evolution.Game.Model.Items
                 var RandomChoice = RandomNumberGenerator.GetInt32(1, 4);
                 if (RandomChoice == 1)
                 {
-                    var temp = _direction + _initialPowerDirection;
+                    var temp = _direction + setup.InitialPowerDirection;
                     if (temp > Directions.UpLeft) //Cruel hack, but should work
                         temp = Directions.Up;
                     _direction = temp;
-                    _energy -= _initialExpendEnergyToRotate;
+                    _energy -= setup.InitialExpendEnergyToRotate;
                 }
                 else
                 {
                     var chosenSpeed = RandomNumberGenerator.GetInt32(1, _speed + 1);
 
-                    MakeMove(chosenSpeed, (Directions)RandomNumberGenerator.GetInt32(1, 9));
+                    MakeMove(chosenSpeed, (Directions)RandomNumberGenerator.GetInt32(1, 9), setup);
                 }
             }
 
@@ -230,7 +231,7 @@ namespace Evolution.Game.Model.Items
                     var newSight = GetNewSight(_sight);
                     var newGeneration = GetNewGeneration(_generation);
                     _world.SpawnNewZavr(this, newSpeed, newSight, newGeneration, (Directions)RandomNumberGenerator.GetInt32(1, 9));
-                    Energy -= _maxEnergy / _initialExpendEnergyToReplicate;
+                    Energy -= _maxEnergy / setup.InitialExpendEnergyToReplicate;
                     MyChilds++;
                 }
             }
@@ -303,22 +304,22 @@ namespace Evolution.Game.Model.Items
             }
         }
 
-        private void EatFood()
+        private void EatFood(ZavrSetup setup)
         {
             var food = _world.EatVegetable(this);
-            _energy += food * _initialEnergyToEat; //ToDo: well, how much should we add here?
+            _energy += food * setup.InitialEnergyToEat; //ToDo: well, how much should we add here?
         }
 
-        private void MakeMove(in int chosenSpeed, Directions itemDirection)
+        private void MakeMove(in int chosenSpeed, Directions itemDirection, ZavrSetup setup)
         {
 
             _world.MoveZavr(this, itemDirection, chosenSpeed);
-            _energy -= CostOfMovement(chosenSpeed);
+            _energy -= CostOfMovement(chosenSpeed, setup);
         }
 
-        private int CostOfMovement(in int chosenSpeed)
+        private int CostOfMovement(in int chosenSpeed, ZavrSetup setup)
         {
-            var energy = (int)Math.Pow(chosenSpeed, _initialCostOfMovementOne) * _initialCostOfMovementTwo;
+            var energy = (int)Math.Pow(chosenSpeed, setup.InitialCostOfMovementOne) * setup.InitialCostOfMovementTwo;
             return energy;
         }
 

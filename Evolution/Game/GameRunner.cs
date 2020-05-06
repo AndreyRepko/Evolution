@@ -191,13 +191,13 @@ namespace Evolution.Game
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void NextTurn(int count)
+        public void NextTurn(int count, ZavrSetup setup)
         {
             for (int i = 0; i < count; i++)
             {
                 if (IsFieldIsAlmostFull())
                     break;
-                DoNextTurn();
+                DoNextTurn(setup);
                 Statistic.Gather();
                 if (IsFieldIsAlmostFull() || !Zavrs.Any())
                     break;
@@ -262,11 +262,11 @@ namespace Evolution.Game
             }
         }
 
-        private void DoNextTurn()
+        private void DoNextTurn(ZavrSetup setup)
         {
             foreach (var zavr in _zavrs.Where(z => z.State).ToList())
             {
-                zavr.NextTurn(true);
+                zavr.NextTurn(true, setup);
             }
 
             foreach (var vegetable in _vegetables.ToList())
