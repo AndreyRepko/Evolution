@@ -22,19 +22,29 @@ namespace Evolution.Game.Model.Items
         private int _myChilds;
         private int _generation;
 
-        public Zavr(IZavrWorldInteraction world)
+        private int _initialMaxAge = 100;
+        private int _initialMaxEnergy = 5000;
+        private int _initialStartEnergy = 3000;
+        private int _initialExpendEnergyToRotate = 5;
+        private int _initialExpendEnergyToReplicate = 2;
+        private int _initialEnergyToEat = 5;
+        private int _initialPowerDirection = 1;
+        private int _initialCostOfMovementTwo = 10;
+        private int _initialCostOfMovementOne = 2;
+
+        public Zavr(IZavrWorldInteraction world, ZavrSetup setup)
         {
             _world = world;
             _age = 1;
             _state = true;
-            _maxAge = 100;
-            _maxEnergy = 5000;
-            _energy = 3000;
+            _maxAge = setup.InitialMaxAge;
+            _maxEnergy = _initialMaxEnergy;
+            _energy = _initialStartEnergy;
             _myChilds = 0;
         }
 
         public Zavr(int age, bool state, int energy, int speed, Directions direction, int myChilds, int generation, int sight, 
-            IZavrWorldInteraction world) : this(world)
+            IZavrWorldInteraction world, ZavrSetup setup) : this(world, setup)
         {
             _age = age;
             _state = state;
@@ -155,9 +165,9 @@ namespace Evolution.Game.Model.Items
 
         public BeingType Type => BeingType.Zavr;
 
-        public static Zavr GetRandomZavr(IZavrWorldInteraction world)
+        public static Zavr GetRandomZavr(IZavrWorldInteraction world, ZavrSetup setup)
         {
-            var zavr = new Zavr(world);
+            var zavr = new Zavr(world, setup);
             zavr._sight = RandomNumberGenerator.GetInt32(1, 10);
             zavr._speed = RandomNumberGenerator.GetInt32(1, 5);
             return zavr;
@@ -196,11 +206,11 @@ namespace Evolution.Game.Model.Items
                 var RandomChoice = RandomNumberGenerator.GetInt32(1, 4);
                 if (RandomChoice == 1)
                 {
-                    var temp = _direction + 1;
+                    var temp = _direction + _initialPowerDirection;
                     if (temp > Directions.UpLeft) //Cruel hack, but should work
                         temp = Directions.Up;
                     _direction = temp;
-                    _energy -= 5;
+                    _energy -= _initialExpendEnergyToRotate;
                 }
                 else
                 {
@@ -220,7 +230,7 @@ namespace Evolution.Game.Model.Items
                     var newSight = GetNewSight(_sight);
                     var newGeneration = GetNewGeneration(_generation);
                     _world.SpawnNewZavr(this, newSpeed, newSight, newGeneration, (Directions)RandomNumberGenerator.GetInt32(1, 9));
-                    Energy -= _maxEnergy / 2;
+                    Energy -= _maxEnergy / _initialExpendEnergyToReplicate;
                     MyChilds++;
                 }
             }
@@ -296,7 +306,7 @@ namespace Evolution.Game.Model.Items
         private void EatFood()
         {
             var food = _world.EatVegetable(this);
-            _energy += food * 5; //ToDo: well, how much should we add here?
+            _energy += food * _initialEnergyToEat; //ToDo: well, how much should we add here?
         }
 
         private void MakeMove(in int chosenSpeed, Directions itemDirection)
@@ -308,7 +318,7 @@ namespace Evolution.Game.Model.Items
 
         private int CostOfMovement(in int chosenSpeed)
         {
-            var energy = (int)Math.Pow(chosenSpeed, 2) * 10;
+            var energy = (int)Math.Pow(chosenSpeed, _initialCostOfMovementOne) * _initialCostOfMovementTwo;
             return energy;
         }
 

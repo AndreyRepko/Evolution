@@ -137,19 +137,22 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Column="0" Grid.Row="0" Margin="5">Board size</TextBlock>
-                <TextBox Grid.Column="1" Grid.Row="0" Margin="5" Text="{Binding Setup.BoardSize}"/>
+                <TextBox Grid.Column="1" Grid.Row="0" Margin="5" Text="{Binding BoardSetup.BoardSize}"/>
                 
                 <TextBlock Grid.Column="0" Grid.Row="1" Margin="5">Initial Zavrs count</TextBlock>
-                <TextBox Grid.Column="1" Grid.Row="1" Margin="5" Text="{Binding Setup.InitialZavrsCount}"/>
+                <TextBox Grid.Column="1" Grid.Row="1" Margin="5" Text="{Binding BoardSetup.InitialZavrsCount}"/>
                 
                 <TextBlock Grid.Column="0" Grid.Row="2" Margin="5">Initial Trees count</TextBlock>
-                <TextBox Grid.Column="1" Grid.Row="2" Margin="5" Text="{Binding Setup.InitialTreesCount}"/>
+                <TextBox Grid.Column="1" Grid.Row="2" Margin="5" Text="{Binding BoardSetup.InitialTreesCount}"/>
                 
                 <TextBlock Grid.Column="0" Grid.Row="3" Margin="5">Initial Energy Boxes count</TextBlock>
-                <TextBox Grid.Column="1" Grid.Row="3" Margin="5" Text="{Binding Setup.InitialEnergyBoxCount}"/>
+                <TextBox Grid.Column="1" Grid.Row="3" Margin="5" Text="{Binding BoardSetup.InitialEnergyBoxCount}"/>
                 
                 <TextBlock Grid.Column="0" Grid.Row="4" Margin="5">Energy box nutrition</TextBlock>
-                <TextBox Grid.Column="1" Grid.Row="4" Margin="5" Text="{Binding Setup.EnergyBoxNutrition}"/>
+                <TextBox Grid.Column="1" Grid.Row="4" Margin="5" Text="{Binding BoardSetup.EnergyBoxNutrition}"/>
+                
+                <TextBlock Grid.Column="0" Grid.Row="5" Margin="5">Max Age</TextBlock>
+                <TextBox Grid.Column="1" Grid.Row="5" Margin="5" Text="{Binding Setup.InitialMaxAge}"/>
             </Grid>
         </TabItem>
     </TabControl>

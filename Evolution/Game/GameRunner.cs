@@ -31,6 +31,7 @@ namespace Evolution.Game
 
         private IBeing[][] _beings;
         private Dictionary<IBeing, Position> _beingPositions = new Dictionary<IBeing, Position>();
+        private readonly ZavrSetup _zavrSetup;
 
         public IReadOnlyList<Zavr> Zavrs => _zavrs;
 
@@ -47,7 +48,7 @@ namespace Evolution.Game
             }
         }
 
-        public GameRunner(int zavrs, int vegetables, int energyBox, int maxX, int maxY, int energyBoxNutrition)
+        public GameRunner(int zavrs, int vegetables, int energyBox, int maxX, int maxY, int energyBoxNutrition, ZavrSetup zavrSetup)
         {
             MaxX = maxX;
             MaxY = maxY;
@@ -58,11 +59,12 @@ namespace Evolution.Game
             }
 
             EnergyBoxNutrition = energyBoxNutrition;
+            _zavrSetup = zavrSetup;
             _worldInformation = new WorldInformation(this);
 
             for (var i = 0; i < zavrs; i++)
             {
-                AddZavrAtRandomPosition(Zavr.GetRandomZavr(_worldInformation));
+                AddZavrAtRandomPosition(Zavr.GetRandomZavr(_worldInformation, _zavrSetup));
             }
 
             for (var i = 0; i < vegetables; i++)
@@ -314,7 +316,7 @@ namespace Evolution.Game
             if (!IsOccupied(newPosition))
             {
                 AddZavr(newPosition, new Zavr(1, true, 2500, speed, Directions.Up, 
-                       newGeneration, 0, sight, _worldInformation));
+                       newGeneration, 0, sight, _worldInformation, _zavrSetup));
             }
         }
 

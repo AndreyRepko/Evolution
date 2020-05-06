@@ -15,7 +15,8 @@ namespace Evolution.Presenter
         public  EvolutionGameModel()
         {
             StatisticSeries = new ObservableCollection<LineSeries>();
-            Setup = new GameSetup();
+            BoardSetup = new GameSetup();
+            Setup = new ZavrSetup();
 
             StartNewGame();
         }
@@ -26,9 +27,11 @@ namespace Evolution.Presenter
         private int _daysCount = 1;
         private string _lastTurnTime;
 
-        public GameSetup Setup { get; set; }
+        public GameSetup BoardSetup { get; set; }
+        public ZavrSetup Setup { get; set; }
+        
 
-        public int BoardSize => Setup.BoardSize;
+        public int BoardSize => BoardSetup.BoardSize;
 
         public ObservableCollection<LineSeries> StatisticSeries { get; }
 
@@ -113,11 +116,11 @@ namespace Evolution.Presenter
 
         public int EnergyBoxNutrition
         {
-            get { return Setup.EnergyBoxNutrition; }
+            get { return BoardSetup.EnergyBoxNutrition; }
             set 
             {
-                Setup.EnergyBoxNutrition = value;
-                CurrentGame.EnergyBoxNutrition = Setup.EnergyBoxNutrition;
+                BoardSetup.EnergyBoxNutrition = value;
+                CurrentGame.EnergyBoxNutrition = BoardSetup.EnergyBoxNutrition;
             }
 
         }
@@ -214,9 +217,9 @@ namespace Evolution.Presenter
 
         private GameRunner GetNewGame()
         {
-            return new GameRunner(Setup.InitialZavrsCount, Setup.InitialTreesCount, 
-                Setup.InitialEnergyBoxCount, BoardSize, BoardSize, 
-                Setup.EnergyBoxNutrition);
+            return new GameRunner(BoardSetup.InitialZavrsCount, BoardSetup.InitialTreesCount, 
+                BoardSetup.InitialEnergyBoxCount, BoardSize, BoardSize, 
+                BoardSetup.EnergyBoxNutrition, Setup);
         }
 
         private void CloseWindow(Window window)
