@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -341,6 +342,17 @@ namespace Evolution.Presenter.ChartControl
                 ((INotifyPropertyChanged)MyClass.CurveVisibility[e.OldStartingIndex]).PropertyChanged
                     -= (s, ee) => OnCurveVisibilityChanged(MyClass, eNewValue);
                 MyClass.CurveVisibility.RemoveAt(e.OldStartingIndex);
+            }
+
+            if (e.Action == NotifyCollectionChangedAction.Reset)
+            {
+                MyClass.CurveVisibility.Clear();
+
+                foreach (var x in eNewValue)
+                {
+                    throw new NotImplementedException();
+                }
+
             }
 
 
