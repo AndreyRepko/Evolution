@@ -478,6 +478,17 @@ namespace Evolution.Presenter.ChartControl
         // Using a DependencyProperty as the backing store for DataCollectionName.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty DataCollectionNameProperty =
             DependencyProperty.Register("DataCollectionName", typeof(string),
+                typeof(BasicChart), new PropertyMetadata(""));        
+        
+        public string DataCollectionCaption
+        {
+            get { return (string)GetValue(DataCollectionCaptionProperty); }
+            set { SetValue(DataCollectionCaptionProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for DataCollectionName.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty DataCollectionCaptionProperty =
+            DependencyProperty.Register("DataCollectionCaption", typeof(string),
                 typeof(BasicChart), new PropertyMetadata(""));
 
         public int SkipLabels

@@ -130,21 +130,22 @@ namespace Evolution.Presenter
             set;
         }
 
-        private void NextTurn(ZavrSetup setup)
+        private void NextTurn()
         {
+
             var sw = new Stopwatch();
             sw.Start();
             if (DaysCount > 1000)
             {
                 var game = GetNewGame();
-                game.NextTurn(DaysCount, setup);
+                game.NextTurn(DaysCount, Setup);
 
                 CurrentGame = game;
                 NotifyPropertyChanged(nameof(CurrentGame));
             }
             else
             {
-                CurrentGame.NextTurn(DaysCount, setup);
+                CurrentGame.NextTurn(DaysCount, Setup);
                 NotifyPropertyChanged(nameof(CurrentGame));
             }
 
