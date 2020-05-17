@@ -17,7 +17,7 @@ namespace Evolution.Game
     public class GameRunner : INotifyPropertyChanged
     {
         private WorldInformation _worldInformation;
-        private Dictionary<object, object> _aggressionList = new Dictionary<object, object>();
+        private Dictionary<object, IVictim> _aggressionList = new Dictionary<object, IVictim>();
         private int _day;
 
         public int MaxX { get; }
@@ -296,19 +296,22 @@ namespace Evolution.Game
             _beings[position.X][position.Y] = null;
             _zavrs.Remove(zavr);
             _beingPositions.Remove(zavr);
+            if (_aggressionList.ContainsKey(zavr))
+            {
+                _aggressionList[zavr].NotifyAboutAggressionChange(false);
+                _aggressionList.Remove(zavr);
+            }
         }
 
-        public void AddAggression(object aggressor, object victim)
+        public void AddAggression(object aggressor, IVictim victim)
         {
             if (_aggressionList.ContainsKey(aggressor) && _aggressionList[aggressor] != victim)
             {
-                if (_aggressionList[aggressor] is Vegetable vegetable)
-                    vegetable.NotifyAboutAggressionChange(false);
+                _aggressionList[aggressor].NotifyAboutAggressionChange(false);
             }
 
             _aggressionList[aggressor] = victim;
-            if (victim is Vegetable vegetable2)
-                vegetable2.NotifyAboutAggressionChange(true);
+            _aggressionList[aggressor].NotifyAboutAggressionChange(true);
         }
 
         internal void AddNewZavr(Position newPosition, int speed, int sight, int newGeneration)

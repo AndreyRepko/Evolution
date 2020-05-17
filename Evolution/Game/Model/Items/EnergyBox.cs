@@ -4,7 +4,7 @@ using Evolution.Game.Model.Positions;
 
 namespace Evolution.Game.Model.Items
 {
-    public class EnergyBox : IFood, IBeing
+    public class EnergyBox : IFood, IBeing, IVictim
     {
         private int _nutrition;
         private bool _underAggression;

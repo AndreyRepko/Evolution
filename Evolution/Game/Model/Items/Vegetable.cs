@@ -6,7 +6,7 @@ using Evolution.Game.Model.WorldInteraction;
 
 namespace Evolution.Game.Model.Items
 {
-    public class Vegetable : IFood, IBeing
+    public class Vegetable : IFood, IBeing, IVictim
     {
         private readonly IVegetableWorldInteraction _world;
         private int _nutrition;

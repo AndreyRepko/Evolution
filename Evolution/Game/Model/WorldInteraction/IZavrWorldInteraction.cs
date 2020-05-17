@@ -6,11 +6,17 @@ using Evolution.Game.Model.Positions;
 
 namespace Evolution.Game.Model
 {
+    public class SeenItem
+    {
+        public Directions Where;
+        public int Nutrition;
+        public object Item;
+    }
     /// <summary>
     /// Information about what Zavr actually can see in the world
     /// Please, take attention that exact distance and if food is aggressive is not available at the moment
     /// </summary>
-    public class SeenItems : List<(Directions where, int nutrition, object item)>
+    public class SeenItems : List<SeenItem>
     { }
 
     public interface IZavrWorldInteraction
@@ -25,7 +31,7 @@ namespace Evolution.Game.Model
         SeenItems WhatZavrCanSee(IBeing zavr, int sight, Directions direction);
         bool CanEat(IBeing zavr);
         int EatVegetable(IBeing zavr);
-        void MarkItemAsVictim(object victim, object aggressor);
+        void MarkItemAsVictim(IVictim victim, object aggressor);
         void MarkZavrAsDead(Zavr zavr);
         void SpawnNewZavr(IBeing zavr, int speed, int sight, int newGeneration, Directions directions);
         Position GetPosition(IBeing being);

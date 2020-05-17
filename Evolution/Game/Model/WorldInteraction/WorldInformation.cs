@@ -43,11 +43,16 @@ namespace Evolution.Game.Model.WorldInteraction
             var position = _world.GetBeingPosition(zavr);
 
             var result = new SeenItems();
-            var items = GetWorldAround(position, sight).Where(x=>x.Being is IFood);
+            var items = GetWorldAround(position, sight).Where(x => x.Being is IFood);
             //ToDo : add limitaiton of see
 
             foreach (var item in items)
-                result.Add((position.GetRelativePosition(item.Position), ((IFood)item.Being).Nutrition, item));
+                result.Add(new SeenItem
+                {
+                    Where = position.GetRelativePosition(item.Position),
+                    Nutrition = ((IFood)item.Being).Nutrition,
+                    Item = item.Being
+                });
 
             return result;
         }
@@ -70,7 +75,7 @@ namespace Evolution.Game.Model.WorldInteraction
             return ((IFood)food.Being).Nutrition;
         }
 
-        public void MarkItemAsVictim(object victim, object aggressor)
+        public void MarkItemAsVictim(IVictim victim, object aggressor)
         {
             _world.AddAggression(aggressor, victim);
         }

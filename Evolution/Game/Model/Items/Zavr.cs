@@ -21,6 +21,7 @@ namespace Evolution.Game.Model.Items
         private int _maxEnergy;
         private int _myChilds;
         private int _generation;
+        private SeenItem _focusItem;
         /*
         private int _initialMaxAge = 100;
         private int _initialMaxEnergy = 5000;
@@ -40,6 +41,7 @@ namespace Evolution.Game.Model.Items
             _maxAge = setup.InitialMaxAge;
             _maxEnergy = setup.InitialMaxEnergy;
             _energy = setup.InitialStartEnergy;
+            _focusItem = null;
 
             _myChilds = 0;
         }
@@ -188,13 +190,18 @@ namespace Evolution.Game.Model.Items
                 else
                 {
                     //Stage 2 : Choose the most valuable tree and go into the direction
-                    var item = items.OrderByDescending(x => x.nutrition).First();
+                    if (_focusItem == null || items.All(item => item.Item != _focusItem.Item))
+                    {
+                        _focusItem = items.OrderByDescending(x => x.Nutrition).First();
+                    }
 
-                    _world.MarkItemAsVictim(item.item, this);
+                    if (_focusItem.Item is IVictim victim)
+                        _world.MarkItemAsVictim(victim, this);
 
                     var chosenSpeed = RandomNumberGenerator.GetInt32(1, _speed + 1);
+                    var direction = items.Where(item => item.Item == _focusItem.Item).Single().Where;
 
-                    MakeMove(chosenSpeed, item.where, setup); // это походить
+                    MakeMove(chosenSpeed, direction, setup); // это походить
                     //If we jump to the food would be fair to eat it ;)
                     if (_world.CanEat(this))
                     {

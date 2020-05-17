@@ -11,7 +11,13 @@ namespace Evolution.Presenter.Converters
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
+            if (values.Length != 1)
+                throw new ArgumentException("Two values are expected");
 
+            var underAggression = (bool)values[0];
+
+            if (underAggression)
+                return new SolidColorBrush(Colors.Gold);
             return new SolidColorBrush(Color.FromRgb(0, 100, 0));
         }
 
