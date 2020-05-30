@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using Evolution.Game.Model.Positions;
 
 namespace Evolution.Game.Model.Items
@@ -28,7 +29,7 @@ namespace Evolution.Game.Model.Items
         public EnergyBox(Position position, int initialNutrition)
         {
             _weakPosition = position;
-            _nutrition = initialNutrition;
+            _nutrition = initialNutrition + RandomNumberGenerator.GetInt32(1, 21) - 10;
         }
 
         public void NotifyAboutAggressionChange(bool aggression)
