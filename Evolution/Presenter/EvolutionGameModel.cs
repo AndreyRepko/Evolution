@@ -2,11 +2,14 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using Evolution.Game;
 using Evolution.Presenter.ChartControl;
+using Microsoft.Win32;
+using Newtonsoft.Json;
 
 namespace Evolution.Presenter
 {
@@ -26,10 +29,25 @@ namespace Evolution.Presenter
         private RelayCommand _nextTurnCommand;
         private int _daysCount = 1;
         private string _lastTurnTime;
+        private RelayCommand _saveGameCommand;
+        private RelayCommand _loadGameCommand;
+        private ZavrSetup _setup;
 
         public GameSetup BoardSetup { get; set; }
-        public ZavrSetup Setup { get; set; }
-        
+
+        public ZavrSetup Setup
+        {
+            get => _setup;
+            set
+            {
+                if (_setup != value)
+                {
+                    _setup = value;
+                    NotifyPropertyChanged(nameof(Setup));
+                }
+            }
+        }
+
 
         public int BoardSize => BoardSetup.BoardSize;
 
@@ -128,6 +146,58 @@ namespace Evolution.Presenter
         {
             get;
             set;
+        }
+
+        public object SaveGameCommand
+        {
+            get
+            {
+                _saveGameCommand ??= new RelayCommand(SaveGame);
+                return _saveGameCommand;
+            }
+        }
+
+        public object LoadGameCommand
+        {
+            get
+            {
+                _loadGameCommand ??= new RelayCommand(LoadGame);
+                return _loadGameCommand;
+            }
+        }
+
+        private void SaveGame()
+        {
+            var saveFileDialog = new SaveFileDialog
+            {
+                DefaultExt = ".zavr", 
+                Filter = "Zavr files (*.zavr)|*.zavr"
+            };
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                var json = JsonConvert.SerializeObject(Setup, Formatting.Indented);
+                if (File.Exists(saveFileDialog.FileName))
+                    File.Delete(saveFileDialog.FileName);
+
+                File.WriteAllText(saveFileDialog.FileName, json);
+            }
+        }
+        
+        private void LoadGame()
+        {
+            var openFileDialog = new OpenFileDialog
+            {
+                DefaultExt = ".zavr",
+                Filter = "Zavr files (*.zavr)|*.zavr"
+            };
+            if (openFileDialog.ShowDialog() == true)
+            {
+                if (File.Exists(openFileDialog.FileName))
+                {
+                    var text = File.ReadAllText(openFileDialog.FileName);
+                    Setup = JsonConvert.DeserializeObject<ZavrSetup>(text);
+                }
+            }
         }
 
         private void NextTurn()
