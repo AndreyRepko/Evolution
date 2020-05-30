@@ -28,13 +28,13 @@ namespace Evolution.Game.Model
         /// <param name="sight">The sight distance.</param>
         /// <param name="direction">Direction of view of zavr</param>
         /// <returns></returns>
-        SeenItems WhatZavrCanSee(IBeing zavr, int sight, Directions direction);
-        bool CanEat(IBeing zavr);
-        int EatVegetable(IBeing zavr);
+        SeenItems WhatZavrCanSee(int sight, Directions direction);
+        bool CanEat();
+        int EatVegetable();
         void MarkItemAsVictim(IVictim victim, object aggressor);
-        void MarkZavrAsDead(Zavr zavr);
-        void SpawnNewZavr(IBeing zavr, int speed, int sight, int newGeneration, Directions directions);
+        void MarkZavrAsDead();
+        void SpawnNewZavr(int speed, int sight, int newGeneration, Directions directions);
         Position GetPosition(IBeing being);
-        void MoveZavr(Zavr zavr, Directions itemDirection, in int chosenSpeed);
+        void MoveZavr(Directions itemDirection, in int chosenSpeed);
     }
 }

@@ -64,7 +64,7 @@ namespace Evolution.Game
 
             for (var i = 0; i < zavrs; i++)
             {
-                AddZavrAtRandomPosition(Zavr.GetRandomZavr(_worldInformation, _zavrSetup));
+                AddZavrAtRandomPosition(Zavr.GetRandomZavr((zavr) => new ZavrsWorld(this, zavr), _zavrSetup));
             }
 
             for (var i = 0; i < vegetables; i++)
@@ -319,7 +319,7 @@ namespace Evolution.Game
             if (!IsOccupied(newPosition))
             {
                 AddZavr(newPosition, new Zavr(1, true, 2500, speed, Directions.Up, 
-                       newGeneration, 0, sight, _worldInformation, _zavrSetup));
+                       newGeneration, 0, sight, (zavr) => new ZavrsWorld(this, zavr), _zavrSetup));
             }
         }
 
