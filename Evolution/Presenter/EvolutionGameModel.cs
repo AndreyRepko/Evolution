@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Threading;
 using Evolution.Game;
 using Evolution.Presenter.ChartControl;
 using Microsoft.Win32;
@@ -15,7 +16,7 @@ namespace Evolution.Presenter
 {
     public class EvolutionGameModel : INotifyPropertyChanged
     {
-        public  EvolutionGameModel()
+        public EvolutionGameModel()
         {
             StatisticSeries = new ObservableCollection<LineSeries>();
             BoardSetup = new GameSetup();
@@ -32,6 +33,10 @@ namespace Evolution.Presenter
         private RelayCommand _saveGameCommand;
         private RelayCommand _loadGameCommand;
         private ZavrSetup _setup;
+        private RelayCommand _playCommand;
+        private DispatcherTimer _playTimer;
+        private bool _isPlaying = false;
+        private string playButtonText = "Play";
 
         public GameSetup BoardSetup { get; set; }
 
@@ -81,6 +86,44 @@ namespace Evolution.Presenter
                 return _nextTurnCommand;
             }
         }
+        public object PlayCommand
+        {
+            get
+            {
+                _playCommand ??= new RelayCommand(Play);
+                return _playCommand;
+            }
+        }
+
+        public string PlayButtonText
+        {
+            get => playButtonText;
+            set
+            {
+                if (playButtonText != value)
+                {
+                    playButtonText = value;
+                    NotifyPropertyChanged(nameof(PlayButtonText));
+                }
+            }
+        }
+        private void Play()
+        {
+            if (_isPlaying)
+            {
+                _playTimer?.Stop();
+                PlayButtonText = "Play";
+            }
+            else
+            {
+                _playTimer = new DispatcherTimer();
+                _playTimer.Tick += (_, __) => NextTurn();
+                _playTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);
+                _playTimer.Start();
+                PlayButtonText = "Stop";
+            }
+            _isPlaying = !_isPlaying;
+        }
 
         public int DaysCount
         {
@@ -113,7 +156,7 @@ namespace Evolution.Presenter
         {
             get { return CurrentGame?.Statistic.AverageEnergy ?? -1; }
         }
-        
+
         public int AverageGeneration
         {
             get { return CurrentGame?.Statistic.AverageGeneration ?? -1; }
@@ -135,7 +178,7 @@ namespace Evolution.Presenter
         public int EnergyBoxNutrition
         {
             get { return BoardSetup.EnergyBoxNutrition; }
-            set 
+            set
             {
                 BoardSetup.EnergyBoxNutrition = value;
                 CurrentGame.EnergyBoxNutrition = BoardSetup.EnergyBoxNutrition;
@@ -170,7 +213,7 @@ namespace Evolution.Presenter
         {
             var saveFileDialog = new SaveFileDialog
             {
-                DefaultExt = ".zavr", 
+                DefaultExt = ".zavr",
                 Filter = "Zavr files (*.zavr)|*.zavr"
             };
             if (saveFileDialog.ShowDialog() == true)
@@ -182,7 +225,7 @@ namespace Evolution.Presenter
                 File.WriteAllText(saveFileDialog.FileName, json);
             }
         }
-        
+
         private void LoadGame()
         {
             var openFileDialog = new OpenFileDialog
@@ -288,8 +331,8 @@ namespace Evolution.Presenter
 
         private GameRunner GetNewGame()
         {
-            return new GameRunner(BoardSetup.InitialZavrsCount, BoardSetup.InitialTreesCount, 
-                BoardSetup.InitialEnergyBoxCount, BoardSize, BoardSize, 
+            return new GameRunner(BoardSetup.InitialZavrsCount, BoardSetup.InitialTreesCount,
+                BoardSetup.InitialEnergyBoxCount, BoardSize, BoardSize,
                 BoardSetup.EnergyBoxNutrition, Setup);
         }
 
