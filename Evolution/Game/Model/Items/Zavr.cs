@@ -179,6 +179,7 @@ namespace Evolution.Game.Model.Items
 
         public void NextTurn(bool isNormalTurn, ZavrSetup setup)
         {
+            // ToDo: Deside to look around, or just check for focus item existence.
             SeenItems items = GetAroundItems();
 
             if (items.Any())
@@ -190,14 +191,16 @@ namespace Evolution.Game.Model.Items
                 else
                 {
                     //Stage 2 : Choose the most valuable tree and go into the direction
+                    //ToDo: give option to change focus item 
                     if (_focusItem == null || items.All(item => item.Item != _focusItem.Item))
                     {
+                        // ToDo: how to select focus? f(Distance, Nutrition, Speed)
                         _focusItem = items.OrderByDescending(x => x.Nutrition).First();
                     }
 
                     if (_focusItem.Item is IVictim victim)
                         _world.MarkItemAsVictim(victim, this);
-
+                    // ToDo: select speed more intelligent. 
                     var chosenSpeed = RandomNumberGenerator.GetInt32(1, _speed + 1);
                     var direction = items.Where(item => item.Item == _focusItem.Item).Single().Where;
 
