@@ -322,17 +322,30 @@ namespace Evolution.Presenter.ChartControl
             sender.PlotArea.ItemsSource = items;
         }
 
-        private static void ItemsSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e, IEnumerable eNewValue)
+        private static void ItemsSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e, IEnumerable eNewValue,
+            string captionName)
         {
             var MyClass = (BasicChart)sender;
 
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
+
+                string caption = null;
+                //Loop trough all the sources
+                foreach (var item in eNewValue)
+                {
+                    PointCollection PointsOnChart = new PointCollection();
+                    int X = 0;
+
+                    // Get the Collection of dataitems from the current source
+                     caption = (string) GetPropValue(item, captionName);
+                }
+
                 MyClass.CurveVisibility.Add(new CheckBoxClass()
                 {
                     BackColor = DistinctColorList[MyClass.CurveVisibility.Count],
                     IsChecked = true,
-                    Name = "Curve nr: " + (MyClass.CurveVisibility.Count + 1).ToString()
+                    Name = caption ?? "Curve nr: " + (MyClass.CurveVisibility.Count + 1).ToString()
                 });
                 ((INotifyPropertyChanged)MyClass.CurveVisibility[MyClass.CurveVisibility.Count - 1]).PropertyChanged
                     += (s, ee) => OnCurveVisibilityChanged(MyClass, eNewValue);
@@ -373,11 +386,19 @@ namespace Evolution.Presenter.ChartControl
         {
             var MyBasicChart = (BasicChart)d;
 
+            var captionName = MyBasicChart.DataCollectionCaption;
+
             foreach (var item in MyBasicChart.ItemsSource)
             {
+                throw new NotImplementedException("Please check/implement reading caption for the Item. Caption name field is above. "+
+                                                  "I can't do it as no code tat invokes this delegate written at the moment, so what type of Item here is not clear... :) :) ");
+                string caption = null;
+                // Get the Collection of dataitems from the current source
+                caption = (string)GetPropValue(item, captionName);
+
                 int i = MyBasicChart.CurveVisibility.Count;
                 // Set up a Notification if the IsChecked property is changed
-                MyBasicChart.CurveVisibility.Add(new CheckBoxClass() { BackColor = DistinctColorList[i], Name = "Curve nr: " + (i + 1).ToString() });
+                MyBasicChart.CurveVisibility.Add(new CheckBoxClass() { BackColor = DistinctColorList[i], Name = caption ?? "Curve nr: " + (i + 1).ToString() });
 
                 ((INotifyPropertyChanged)MyBasicChart.CurveVisibility[MyBasicChart.CurveVisibility.Count - 1]).PropertyChanged +=
                     (s, ee) => OnCurveVisibilityChanged(MyBasicChart, (IEnumerable)e.NewValue);
@@ -389,7 +410,7 @@ namespace Evolution.Presenter.ChartControl
                 // it needs to update the Layout if items are added, removed etc.
                 if (e.NewValue is INotifyCollectionChanged)
                     ((INotifyCollectionChanged)e.NewValue).CollectionChanged += (s, ee) =>
-                    ItemsSource_CollectionChanged(MyBasicChart, ee, (IEnumerable)e.NewValue);
+                    ItemsSource_CollectionChanged(MyBasicChart, ee, (IEnumerable)e.NewValue, captionName);
             }
 
             if (e.OldValue != null)
@@ -397,7 +418,8 @@ namespace Evolution.Presenter.ChartControl
                 // Unhook the Event
                 if (e.OldValue is INotifyCollectionChanged)
                     ((INotifyCollectionChanged)e.OldValue).CollectionChanged -=
-                        (s, ee) => ItemsSource_CollectionChanged(MyBasicChart, ee, (IEnumerable)e.OldValue);
+                        (s, ee) => 
+                            ItemsSource_CollectionChanged(MyBasicChart, ee, (IEnumerable)e.OldValue, captionName);
 
             }
 

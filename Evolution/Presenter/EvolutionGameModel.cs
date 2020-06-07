@@ -297,19 +297,19 @@ namespace Evolution.Presenter
             }
 
 
-            var speedSeries = new LineSeries() { Name = "Average speed" };
+            var speedSeries = new LineSeries() { Caption = "Average speed" };
             foreach (var pair in CurrentGame.Statistic.AverageSpeedByDays.Where(x => filter(x.Key)))
             {
                 speedSeries.Data.Add(new DataPoint(pair.Key, pair.Value));
             }
 
-            var sightSeries = new LineSeries() { Name = "Average sight" };
+            var sightSeries = new LineSeries() { Caption = "Average sight" };
             foreach (var pair in CurrentGame.Statistic.AverageSightByDays.Where(x => filter(x.Key)))
             {
                 sightSeries.Data.Add(new DataPoint(pair.Key, pair.Value));
             }
 
-            var ZavrCountSeries = new LineSeries() { Name = "Zavr Count" };
+            var ZavrCountSeries = new LineSeries() { Caption = "Zavr Count" };
             foreach (var pair in CurrentGame.Statistic.ZavrCountByDays.Where(x => filter(x.Key)))
             {
                 ZavrCountSeries.Data.Add(new DataPoint(pair.Key, pair.Value));

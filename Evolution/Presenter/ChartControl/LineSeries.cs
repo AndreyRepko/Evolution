@@ -14,13 +14,13 @@ namespace Evolution.Presenter.ChartControl
             }
         }
 
-        private string _name = "";
-        public string Name
+        private string _caption = "";
+        public string Caption
         {
-            get { return _name; }
+            get { return _caption; }
             set
             {
-                SetProperty(ref _name, value);
+                SetProperty(ref _caption, value);
             }
         }
     }

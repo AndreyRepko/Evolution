@@ -112,6 +112,7 @@
                 HorizontalAlignment="Stretch"
                 ItemsSource="{Binding StatisticSeries}"
                 DataCollectionName="Data"   
+                DataCollectionCaption="Caption"
                 DisplayMemberLabels="Day"
                 DisplayMemberValues="Value"
                 SkipLabels="3"
