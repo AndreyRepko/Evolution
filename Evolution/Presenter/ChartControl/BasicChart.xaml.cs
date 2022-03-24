@@ -335,7 +335,7 @@ namespace Evolution.Presenter.ChartControl
                 foreach (var item in eNewValue)
                 {
                     PointCollection PointsOnChart = new PointCollection();
-                    int X = 0;
+                    //int X = 0;
 
                     // Get the Collection of dataitems from the current source
                      caption = (string) GetPropValue(item, captionName);

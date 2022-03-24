@@ -50,7 +50,7 @@ namespace Evolution.Game.Model.Positions
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
             if (obj == null) return false;
 
