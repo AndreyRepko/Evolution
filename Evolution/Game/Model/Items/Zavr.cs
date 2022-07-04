@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -16,12 +17,19 @@ namespace Evolution.Game.Model.Items
         private int _energy;
         private bool _state;
         private int _speed;
+        private int _damage;
+        private int _defence;
+        private int _CanMakeChildLowerLimit;
         private Directions _direction;
+        private int _priorityToFocusOnZavr;
+        private int _priorityToFocusOnTree;
+        private int _priorityToFocusOnRock;
         private int _maxAge;
         private int _maxEnergy;
         private int _myChilds;
         private int _generation;
         private SeenItem _focusItem;
+        private Dictionary<Situations, ZavrAction> _strategy = new Dictionary<Situations, ZavrAction>();
         /*
         private int _initialMaxAge = 100;
         private int _initialMaxEnergy = 5000;
@@ -44,19 +52,27 @@ namespace Evolution.Game.Model.Items
             _focusItem = null;
 
             _myChilds = 0;
+
+
         }
 
-        public Zavr(int age, bool state, int energy, int speed, Directions direction, int myChilds, int generation, int sight,
-            Func<Zavr, IZavrWorldInteraction> world, ZavrSetup setup) : this(world, setup)
+        public Zavr(int age, bool state, int energy, int speed, int damage, int canMakeChild, int defence, Directions direction, int myChilds, int generation, int sight,
+            Func<Zavr, IZavrWorldInteraction> world, ZavrSetup setup, int priorityToFocusOnZavr, int priorityToFocusOnTree, int priorityToFocusOnRock) : this(world, setup)
         {
             _age = age;
             _state = state;
             _speed = speed;
+            _damage = damage;
+            _defence = defence;
             _direction = direction;
             _energy = energy;
             _sight = sight;
             _myChilds = myChilds;
             _generation = generation;
+            _CanMakeChildLowerLimit = canMakeChild;
+            _priorityToFocusOnZavr = priorityToFocusOnZavr;
+            _priorityToFocusOnTree = priorityToFocusOnTree;
+            _priorityToFocusOnRock = priorityToFocusOnRock;
         }
 
         /// <summary>
@@ -173,13 +189,22 @@ namespace Evolution.Game.Model.Items
             var zavr = new Zavr(world, setup);
             zavr._sight = RandomNumberGenerator.GetInt32(1, 10);
             zavr._speed = RandomNumberGenerator.GetInt32(1, 5);
+            zavr._defence = RandomNumberGenerator.GetInt32(1, 10);
+            zavr._damage = RandomNumberGenerator.GetInt32(1, 10);
+            zavr._CanMakeChildLowerLimit = RandomNumberGenerator.GetInt32(300, 2000);
+            zavr._priorityToFocusOnZavr = RandomNumberGenerator.GetInt32(1, 8);
+            zavr._priorityToFocusOnTree = RandomNumberGenerator.GetInt32(1, 8);
+            zavr._priorityToFocusOnRock = RandomNumberGenerator.GetInt32(1, 8);
             return zavr;
         }
 
 
         public void NextTurn(bool isNormalTurn, ZavrSetup setup)
         {
-            // ToDo: Deside to look around, or just check for focus item existence.
+            // ToDo: Decide to look around, or just check for focus item existence.
+
+            
+
             SeenItems items = GetAroundItems();
 
             if (items.Any())
@@ -240,7 +265,14 @@ namespace Evolution.Game.Model.Items
                     var newSpeed = GetNewSpeed(_speed);
                     var newSight = GetNewSight(_sight);
                     var newGeneration = GetNewGeneration(_generation);
-                    _world.SpawnNewZavr(newSpeed, newSight, newGeneration, (Directions)RandomNumberGenerator.GetInt32(1, 9));
+                    var newDamage = GetNewDamage(_damage);
+                    var newDefence = GetNewDefence(_defence);
+                    var newCanMakeChildLowerLimit = GetNewCanMakeChildLowerLimit(_CanMakeChildLowerLimit);
+                    var newPriorityToFocusOnZavr = GetNewPriorityToFocusOnZavr(_priorityToFocusOnZavr);
+                    var newPriorityToFocusOnTree = GetNewPriorityToFocusOnTree(_priorityToFocusOnTree);
+                    var newPriorityToFocusOnRock = GetNewPriorityToFocusOnRock(_priorityToFocusOnRock);
+                    _world.SpawnNewZavr(newSpeed, newSight, newDamage, newDefence, newCanMakeChildLowerLimit, 
+                        newGeneration, (Directions)RandomNumberGenerator.GetInt32(1, 9), newPriorityToFocusOnZavr, newPriorityToFocusOnTree, newPriorityToFocusOnRock);
                     Energy -= _maxEnergy / setup.InitialExpendEnergyToReplicate;
                     MyChilds++;
                 }
@@ -264,6 +296,7 @@ namespace Evolution.Game.Model.Items
             return energy;
         }
 
+        
         private int GetNewGeneration(int _generation)
         {
             var newGeneration = _generation++;
@@ -292,6 +325,77 @@ namespace Evolution.Game.Model.Items
             return newSpeed;
         }
 
+        private int GetNewDamage(int damage)
+        {
+            var newDamage = damage + RandomTransformer.GetChange();
+            if (newDamage < 1)
+            {
+                newDamage = 1;
+            }
+            return newDamage;
+        }
+
+        private int GetNewDefence(int defence)
+        {
+            var newDefence = defence + RandomTransformer.GetChange();
+            if (newDefence < 1)
+            {
+                newDefence = 1;
+            }
+            return newDefence;
+        }
+
+        private int GetNewCanMakeChildLowerLimit(int canMakeChildLowerLimit)
+        {
+            var newCanMakeChildLowerLimit = canMakeChildLowerLimit + RandomTransformer.GetChange();
+            if (newCanMakeChildLowerLimit < 1)
+            {
+                newCanMakeChildLowerLimit = 1;
+            }
+            return newCanMakeChildLowerLimit;
+        }
+
+        private int GetNewPriorityToFocusOnZavr(int priorityToFocusOnZavr)
+        {
+            var newPriorityToFocusOnZavr = priorityToFocusOnZavr + RandomTransformer.GetChange();
+            if (newPriorityToFocusOnZavr < 1)
+            {
+                newPriorityToFocusOnZavr = 1;
+            }
+            else if (newPriorityToFocusOnZavr > 8)
+            {
+                newPriorityToFocusOnZavr = 8;
+            }
+            return newPriorityToFocusOnZavr;
+        }
+
+        private int GetNewPriorityToFocusOnTree(int priorityToFocusOnTree)
+        {
+            var newPriorityToFocusOnTree = priorityToFocusOnTree + RandomTransformer.GetChange();
+            if (newPriorityToFocusOnTree < 1)
+            {
+                newPriorityToFocusOnTree = 1;
+            }
+            else if (newPriorityToFocusOnTree > 8)
+            {
+                newPriorityToFocusOnTree = 8;
+            }
+            return newPriorityToFocusOnTree;
+        }
+
+        private int GetNewPriorityToFocusOnRock(int priorityToFocusOnRock)
+        {
+            var newPriorityToFocusOnRock = priorityToFocusOnRock + RandomTransformer.GetChange();
+            if (newPriorityToFocusOnRock < 1)
+            {
+                newPriorityToFocusOnRock = 1;
+            }
+            else if (newPriorityToFocusOnRock > 8)
+            {
+                newPriorityToFocusOnRock = 8;
+            }
+            return newPriorityToFocusOnRock;
+        }
         private void KillZavr()
         {
             State = false;

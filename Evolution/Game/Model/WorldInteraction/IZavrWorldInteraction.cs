@@ -10,6 +10,8 @@ namespace Evolution.Game.Model
     {
         public Directions Where;
         public int Nutrition;
+        public int Damage;
+        public int Defence;
         public object Item;
     }
     /// <summary>
@@ -33,7 +35,7 @@ namespace Evolution.Game.Model
         int EatVegetable();
         void MarkItemAsVictim(IVictim victim, object aggressor);
         void MarkZavrAsDead();
-        void SpawnNewZavr(int speed, int sight, int newGeneration, Directions directions);
+        void SpawnNewZavr(int speed, int sight, int damage, int defence, int canMakeChildLowerLimit, int newGeneration, Directions directions, int priorityToFocusOnZavr, int priorityToFocusOnTree, int priorityToFocusOnRock);
         Position GetPosition(IBeing being);
         void MoveZavr(Directions itemDirection, in int chosenSpeed);
     }
