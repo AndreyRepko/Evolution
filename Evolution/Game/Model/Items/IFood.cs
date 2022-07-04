@@ -1,4 +1,4 @@
-﻿namespace Evolution.Game.Model
+﻿namespace Evolution.Game.Model.Items
 {
     public interface IFood
     {

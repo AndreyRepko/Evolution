@@ -3,14 +3,13 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using Evolution.Game.Model.Positions;
 
-
-namespace Evolution.Game.Model
+namespace Evolution.Game.Model.Items
 {
-    public class EnergyBox : IFood, IBeing
+    public class EnergyBox : IFood, IBeing, IVictim
     {
         private int _nutrition;
-        private readonly Position _position;
         private bool _underAggression;
+        private readonly Position _weakPosition;
 
         public int Nutrition
         {
@@ -29,8 +28,8 @@ namespace Evolution.Game.Model
 
         public EnergyBox(Position position, int initialNutrition)
         {
-            _position = position;
-            _nutrition = initialNutrition;
+            _weakPosition = position;
+            _nutrition = initialNutrition + RandomNumberGenerator.GetInt32(1, 21) - 10;
         }
 
         public void NotifyAboutAggressionChange(bool aggression)
@@ -39,7 +38,7 @@ namespace Evolution.Game.Model
             NotifyPropertyChanged(nameof(IsUnderAggression));
         }
 
-        public Position Position => _position;
+        public Position WeakPosition => _weakPosition;
 
         public BeingType Type => BeingType.EnergyBox;
 

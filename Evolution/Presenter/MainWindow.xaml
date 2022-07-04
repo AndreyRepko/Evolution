@@ -6,70 +6,189 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Evolution"
         xmlns:presenter="clr-namespace:Evolution.Presenter"
+        xmlns:chartControl="clr-namespace:Evolution.Presenter.ChartControl"
         mc:Ignorable="d"
         Title="You say you wanna evolution, well, you know, we all want to change the world" Height="450" Width="800"
         d:DataContext="{d:DesignInstance Type=presenter:EvolutionGameModel}">
-    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <TabControl>
+        <TabItem Header="General">
+            <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-        <Viewbox Grid.Row="0" Grid.Column="0">
-            <ItemsControl ItemsSource="{Binding Path=CurrentGame.Population}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <Canvas Width="{Binding BoardSize}" Height="{Binding BoardSize}" Background="{StaticResource Checkerboard}"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <ContentControl Width="1" Height="1" Style="{StaticResource EvolutionBoardItem}" Content="{Binding}"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-                <ItemsControl.ItemContainerStyle>
-                    <Style>
-                        <Setter Property="Canvas.Left" Value="{Binding Position.X}" />
-                        <Setter Property="Canvas.Top" Value="{Binding Position.Y}" />
-                    </Style>
-                </ItemsControl.ItemContainerStyle>
-            </ItemsControl>
-        </Viewbox>
+                <StackPanel Grid.Column="0" Grid.Row="0">
+                    <WrapPanel>
+                        <TextBlock Margin="5">Zavrs Count:</TextBlock>
+                        <TextBox Margin ="5" Width="50" Text = "{Binding ZavrsCount, Mode=OneWay}"/>
+                    </WrapPanel>
+                    <WrapPanel>
+                        <TextBlock Margin="5">Average Age:</TextBlock>
+                        <TextBox Margin ="2, 5, 5, 5" Width="50" Text = "{Binding AverageAge, Mode=OneWay}"/>
+                    </WrapPanel>
+                    <WrapPanel>
+                        <TextBlock Margin="5">Average Speed:</TextBlock>
+                        <TextBox Margin ="2, 5, 5, 5" Width="50" Text = "{Binding AverageSpeed, Mode=OneWay}"/>
+                    </WrapPanel>
+                    <WrapPanel>
+                        <TextBlock Margin="5">Average Sight:</TextBlock>
+                        <TextBox Margin ="2, 5, 5, 5" Width="50" Text = "{Binding AverageSight, Mode=OneWay}"/>
+                    </WrapPanel>
+                    <WrapPanel>
+                        <TextBlock Margin="5">Average Energy:</TextBlock>
+                        <TextBox Margin ="2, 5, 5, 5" Width="50" Text = "{Binding AverageEnergy, Mode=OneWay}"/>
+                    </WrapPanel>
+                </StackPanel>
 
-        <StackPanel Grid.Column="1" Grid.Row="0">
-            <Button Margin ="5" Command = "{Binding StartNewGameCommand}">Start new game</Button>
-            <Button Margin ="5" Command = "{Binding NextTurnCommand}">Next turn</Button>
-            <WrapPanel>
-                <TextBlock Margin="5">Days Count: </TextBlock>
-                <TextBox Margin ="5" Width="50" Text = "{Binding DaysCount}"/>
-            </WrapPanel> 
-            <WrapPanel>
-                <TextBlock Margin="5">Nutrition: </TextBlock>
-                <TextBox Margin ="5" Width="25" Text = "{Binding EnergyBoxNutrition}"/>
-            </WrapPanel>
-            <Button Margin ="5" Command="{Binding CloseWindowCommand, Mode=OneWay}"
+                <Viewbox Grid.Row="0" Grid.Column="1">
+                    <ItemsControl ItemsSource="{Binding Path=CurrentGame.Population2}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas Width="{Binding BoardSize}" Height="{Binding BoardSize}" Background="{StaticResource Checkerboard}"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <ContentControl Width="1" Height="1" Style="{StaticResource EvolutionBoardItem}" Content="{Binding}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemContainerStyle>
+                            <Style>
+                                <Setter Property="Canvas.Left" Value="{Binding WeakPosition.X}" />
+                                <Setter Property="Canvas.Top" Value="{Binding WeakPosition.Y}" />
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
+                    </ItemsControl>
+                </Viewbox>
+
+                <StackPanel Grid.Column="2" Grid.Row="0">
+                    <Button Margin ="5" Command = "{Binding StartNewGameCommand}">Start new game</Button>
+                    <Button Margin ="5" Command = "{Binding NextTurnCommand}">Next turn</Button>
+                    <Button Margin ="5" Command = "{Binding PlayCommand}" Content="{Binding PlayButtonText}"></Button>
+                    <WrapPanel>
+                        <TextBlock Margin="5">Days Count:</TextBlock>
+                        <TextBox Margin ="5" Width="50" Text = "{Binding DaysCount}"/>
+                    </WrapPanel>
+                    <WrapPanel>
+                        <TextBlock Margin="5">Nutrition:</TextBlock>
+                        <TextBox Margin ="5" Width="25" Text = "{Binding EnergyBoxNutrition}"/>
+                    </WrapPanel>
+                    <WrapPanel>
+                        <TextBlock Margin="5">Show last 100 days:</TextBlock>
+                        <CheckBox Margin ="5" Width="25" IsChecked = "{Binding IsLimitedStatistic}"/>
+                    </WrapPanel>
+                    <Button Margin ="5" Command="{Binding CloseWindowCommand, Mode=OneWay}"
                     CommandParameter="{Binding ElementName=ThisWindow}">Exit</Button>
-        </StackPanel>
-        <StatusBar Grid.Row="1" Grid.Column ="0" Grid.ColumnSpan="2">
-            <StatusBarItem>
-                <TextBlock>
-                    <TextBlock Text="Day : "/>
-                    <TextBlock Text="{Binding CurrentGame.Day}"/>
-                </TextBlock>
-            </StatusBarItem>
-            <StatusBarItem>
-                <Rectangle VerticalAlignment="Stretch" Fill="Blue" Width="1"/>
-            </StatusBarItem>
-            <StatusBarItem>
-                <TextBlock>
-                    <TextBlock Text="Time per turn : "/>
-                    <TextBlock Text="{Binding LastTurnTime}"/>
-                </TextBlock>
-            </StatusBarItem>
-        </StatusBar>
-    </Grid>
+                </StackPanel>
+                <StatusBar Grid.Row="1" Grid.Column ="0" Grid.ColumnSpan="3">
+                    <StatusBarItem>
+                        <TextBlock>
+                            <TextBlock Text="Day : "/>
+                            <TextBlock Text="{Binding CurrentGame.Day}"/>
+                        </TextBlock>
+                    </StatusBarItem>
+                    <StatusBarItem>
+                        <Rectangle VerticalAlignment="Stretch" Fill="Blue" Width="1"/>
+                    </StatusBarItem>
+                    <StatusBarItem>
+                        <TextBlock>
+                            <TextBlock Text="Time per turn : "/>
+                            <TextBlock Text="{Binding LastTurnTime}"/>
+                        </TextBlock>
+                    </StatusBarItem>
+                </StatusBar>
+            </Grid>
+        </TabItem>
+        <TabItem Header ="Statistic">
+            <chartControl:BasicChart 
+                x:Name="MyChart"
+                VerticalAlignment="Stretch"
+                HorizontalAlignment="Stretch"
+                ItemsSource="{Binding StatisticSeries}"
+                DataCollectionName="Data"   
+                DataCollectionCaption="Caption"
+                DisplayMemberLabels="Day"
+                DisplayMemberValues="Value"
+                SkipLabels="3"
+                StartSkipAt="1"
+                ShowGraphPoints="True"
+                ChartTitle="Zavrs statistic" 
+                YLabel="Speed / sight" 
+                XLabel="Days" YMax="10" YMin="0" DoubleToString="0.00"
+                XMin="1" XMax="{Binding DaysCount}">
+            </chartControl:BasicChart>
+        </TabItem> 
+        <TabItem Header ="Setup">
+            <Grid VerticalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="40" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.Row="0" Margin="5">Board size</TextBlock>
+                <TextBox Grid.Column="1" Grid.Row="0" Margin="5" Text="{Binding BoardSetup.BoardSize}"/>
+                
+                <TextBlock Grid.Column="0" Grid.Row="1" Margin="5">Initial Zavrs count</TextBlock>
+                <TextBox Grid.Column="1" Grid.Row="1" Margin="5" Text="{Binding BoardSetup.InitialZavrsCount}"/>
+                
+                <TextBlock Grid.Column="0" Grid.Row="2" Margin="5">Initial Trees count</TextBlock>
+                <TextBox Grid.Column="1" Grid.Row="2" Margin="5" Text="{Binding BoardSetup.InitialTreesCount}"/>
+                
+                <TextBlock Grid.Column="0" Grid.Row="3" Margin="5">Initial Energy Boxes count</TextBlock>
+                <TextBox Grid.Column="1" Grid.Row="3" Margin="5" Text="{Binding BoardSetup.InitialEnergyBoxCount}"/>
+                
+                <TextBlock Grid.Column="0" Grid.Row="4" Margin="5">Energy box nutrition</TextBlock>
+                <TextBox Grid.Column="1" Grid.Row="4" Margin="5" Text="{Binding BoardSetup.EnergyBoxNutrition}"/>
+                
+                <TextBlock Grid.Column="0" Grid.Row="5" Margin="5">Max Age</TextBlock>
+                <TextBox Grid.Column="1" Grid.Row="5" Margin="5" Text="{Binding Setup.InitialMaxAge}"/>
+
+                <TextBlock Grid.Column="0" Grid.Row="6" Margin="5">Max Energy</TextBlock>
+                <TextBox Grid.Column="1" Grid.Row="6" Margin="5" Text="{Binding Setup.InitialMaxEnergy}"/>
+
+                <TextBlock Grid.Column="0" Grid.Row="7" Margin="5">Start Energy</TextBlock>
+                <TextBox Grid.Column="1" Grid.Row="7" Margin="5" Text="{Binding Setup.InitialStartEnergy}"/>
+
+                <TextBlock Grid.Column="0" Grid.Row="8" Margin="5">Expend Energy To Rotate</TextBlock>
+                <TextBox Grid.Column="1" Grid.Row="8" Margin="5" Text="{Binding Setup.InitialExpendEnergyToRotate}"/>
+
+                <TextBlock Grid.Column="0" Grid.Row="9" Margin="5">Energy To Eat</TextBlock>
+                <TextBox Grid.Column="1" Grid.Row="9" Margin="5" Text="{Binding Setup.InitialEnergyToEat}"/>
+
+                <TextBlock Grid.Column="0" Grid.Row="10" Margin="5">Power Direction</TextBlock>
+                <TextBox Grid.Column="1" Grid.Row="10" Margin="5" Text="{Binding Setup.InitialPowerDirection}"/>
+
+                <TextBlock Grid.Column="0" Grid.Row="11" Margin="5">Cost Of Movement Two</TextBlock>
+                <TextBox Grid.Column="1" Grid.Row="11" Margin="5" Text="{Binding Setup.InitialCostOfMovementTwo}"/>
+
+                <TextBlock Grid.Column="0" Grid.Row="12" Margin="5">Cost Of Movement One</TextBlock>
+                <TextBox Grid.Column="1" Grid.Row="12" Margin="5" Text="{Binding Setup.InitialCostOfMovementOne}"/>
+
+                <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="13" Margin="10" Command="{Binding LoadGameCommand}">Load game</Button>
+                <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="14" Margin="10" Command="{Binding SaveGameCommand}">Save game</Button>
+            </Grid>
+        </TabItem>
+    </TabControl>
 </Window>

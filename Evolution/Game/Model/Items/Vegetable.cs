@@ -2,13 +2,14 @@
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using Evolution.Game.Model.Positions;
+using Evolution.Game.Model.WorldInteraction;
 
-namespace Evolution.Game.Model
+namespace Evolution.Game.Model.Items
 {
-    public class Vegetable : IFood, IBeing
+    public class Vegetable : IFood, IBeing, IVictim
     {
+        private readonly IVegetableWorldInteraction _world;
         private int _nutrition;
-        private readonly Position _position;
         private readonly int _increment;
         private bool _underAggression;
         private int _age;
@@ -41,15 +42,15 @@ namespace Evolution.Game.Model
 
         public bool IsUnderAggression => _underAggression;
 
-        public Vegetable(Position position, int initialNutrition, int increment = 1)
+        public Vegetable(IVegetableWorldInteraction world, int initialNutrition, int increment = 1)
         {
-            _position = position;
+            _world = world;
             _nutrition = initialNutrition;
             _age = 1;
             _increment = increment;
         }
 
-        public Vegetable(Position position) : this(position, 1)  { }
+        public Vegetable(IVegetableWorldInteraction world) : this(world, 1)  { }
 
         public void NotifyAboutAggressionChange(bool aggression)
         {
@@ -57,11 +58,11 @@ namespace Evolution.Game.Model
             NotifyPropertyChanged(nameof(IsUnderAggression));
         }
 
-        public Position Position => _position;
+        public Position WeakPosition => _world.GetPosition(this);
 
         public BeingType Type => BeingType.Tree;
 
-        public void NextTurn(bool isNormalTurn, IVegetetableWorldInteraction world)
+        public void NextTurn(bool isNormalTurn)
         {
             if (isNormalTurn)
                 Nutrition += _increment;
@@ -75,7 +76,7 @@ namespace Evolution.Game.Model
               var random  = RandomNumberGenerator.GetInt32(1, 4);
                 if (random == 1)
                 {
-                    world.SpawnNewVegetable(Position, (Directions)RandomNumberGenerator.GetInt32(1, 9));
+                    _world.SpawnNewVegetable(this, (Directions)RandomNumberGenerator.GetInt32(1, 9));
                     Nutrition -= 1;
                 }
             }

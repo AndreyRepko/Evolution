@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Evolution.Game;
+using Evolution.Game.Model.Items;
+using System;
 using System.Diagnostics;
 using System.Windows.Input;
 
