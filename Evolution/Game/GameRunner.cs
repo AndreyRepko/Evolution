@@ -314,12 +314,12 @@ namespace Evolution.Game
             _aggressionList[aggressor].NotifyAboutAggressionChange(true);
         }
 
-        internal void AddNewZavr(Position newPosition, int speed, int sight, int newGeneration)
+        internal void AddNewZavr(Position newPosition, int speed, int damage, int defence, int canMakeChildLowerLimit, int sight, int newGeneration, int priorityToFocusOnZavr, int priorityToFocusOnTree, int priorityToFocusOnRock)
         {
             if (!IsOccupied(newPosition))
             {
-                AddZavr(newPosition, new Zavr(1, true, 2500, speed, Directions.Up, 
-                       newGeneration, 0, sight, (zavr) => new ZavrsWorld(this, zavr), _zavrSetup));
+                AddZavr(newPosition, new Zavr(1, true, 2500, speed, damage, defence, canMakeChildLowerLimit, Directions.Up, 
+                       newGeneration, 0, sight, (zavr) => new ZavrsWorld(this, zavr), _zavrSetup, priorityToFocusOnZavr, priorityToFocusOnTree, priorityToFocusOnRock));
             }
         }
 

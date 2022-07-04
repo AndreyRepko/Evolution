@@ -56,14 +56,14 @@ namespace Evolution.Game.Model.WorldInteraction
             _world.Remove(_zavr);
         }
 
-        public void SpawnNewZavr(int speed, int sight, int newGeneration, Directions directions)
+        public void SpawnNewZavr(int speed, int sight, int damage, int defence, int canMakeChildLowerLimit, int newGeneration, Directions directions, int priorityToFocusOnZavr, int priorityToFocusOnTree, int priorityToFocusOnRock)
         {
             var position = _world.GetBeingPosition(_zavr);
 
             var newPosition = position.MoveInDirection(directions, RandomNumberGenerator.GetInt32(1, 2));
             CorrectPositionToAllowed(ref newPosition);
 
-            _world.AddNewZavr(newPosition, speed, sight, newGeneration);
+            _world.AddNewZavr(newPosition, speed, damage, canMakeChildLowerLimit, defence, sight, newGeneration, priorityToFocusOnZavr, priorityToFocusOnTree, priorityToFocusOnRock);
         }
 
         public void MoveZavr(Directions itemDirection, in int chosenSpeed)
